@@ -90,6 +90,7 @@ public class PlayerInfoGUI extends JPanel {
 		userName.setBackground(GameController.BACKGROUND_COLOR_THEME);
 		
 		exit = new JButton("Exit");
+		exit.setFont(GameController.GAME_FONT);
 		exit.setBackground(GameController.BUTTON_COLOR_THEME);
 		exit.addActionListener(event -> {
 			currentView.removeStatsPanel(this);
@@ -148,41 +149,49 @@ public class PlayerInfoGUI extends JPanel {
 		statPanel.setLayout(new GridLayout(8, 1, 2, 2));
 		
 		level = new JLabel("Level: " + player.getLvl());
+		level.setFont(GameController.GAME_FONT);
 		level.setOpaque(false);
 		level.setBackground(GameController.BUTTON_COLOR_THEME);
 		statPanel.add(level);
 		
 		xp = new JLabel("Experience: " + player.getXp() + "/100");
+		xp.setFont(GameController.GAME_FONT);
 		xp.setOpaque(false);
 		xp.setBackground(GameController.BUTTON_COLOR_THEME);
 		statPanel.add(xp);
 		
 		health = new JLabel("Health: " + player.getCurrentHP() + "/" + player.getMaxHP());
+		health.setFont(GameController.GAME_FONT);
 		health.setOpaque(false);
 		health.setBackground(GameController.BUTTON_COLOR_THEME);
 		statPanel.add(health);
 		
 		atkStat = new JLabel("Attack: " + player.getAtk());
+		atkStat.setFont(GameController.GAME_FONT);
 		atkStat.setOpaque(false);
 		atkStat.setBackground(GameController.BUTTON_COLOR_THEME);
 		statPanel.add(atkStat);
 		
 		defStat = new JLabel("Defence: " + player.getDef());
+		defStat.setFont(GameController.GAME_FONT);
 		defStat.setOpaque(false);
 		defStat.setBackground(GameController.BUTTON_COLOR_THEME);
 		statPanel.add(defStat);
 		
 		speed = new JLabel("Speed: " + player.getSpeed());
+		speed.setFont(GameController.GAME_FONT);
 		speed.setOpaque(false);
 		speed.setBackground(GameController.BUTTON_COLOR_THEME);
 		statPanel.add(speed);
 		
 		invWeight = new JLabel("Carry weight: " + player.getCurrentCarry() + "/" + player.getCarryCap());
+		invWeight.setFont(GameController.GAME_FONT);
 		invWeight.setOpaque(false);
 		invWeight.setBackground(GameController.BUTTON_COLOR_THEME);
 		statPanel.add(invWeight);
 		
 		totalGold = new JLabel("Gold: " + player.getGold());
+		totalGold.setFont(GameController.GAME_FONT);
 		totalGold.setOpaque(false);
 		totalGold.setBackground(GameController.BUTTON_COLOR_THEME);
 		statPanel.add(totalGold);
@@ -285,6 +294,7 @@ public class PlayerInfoGUI extends JPanel {
 		JPanel panel = new JPanel();
 		panel.setBackground(GameController.BACKGROUND_COLOR_THEME);
 		JButton unequip = new JButton("Unequip");
+		unequip.setFont(GameController.GAME_FONT);
 		unequip.setBackground(GameController.BUTTON_COLOR_THEME);
 		unequip.addActionListener(event -> {
 			player.unequip(i);

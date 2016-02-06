@@ -7,8 +7,6 @@ import javax.swing.*;
 import items.Item;
 import items.Armor.Armor;
 import items.Consumables.Consumable;
-import items.Consumables.Drink;
-import items.Consumables.Food;
 import items.Consumables.Potion;
 import items.Weapons.Weapon;
 import main.GameController;
@@ -45,14 +43,19 @@ public class ItemPanel extends JPanel {
 	public ItemPanel() {
 		firstSetUp();
 		itemName = new JLabel("Empty");
+		itemName.setFont(GameController.GAME_FONT);
 		itemName.setOpaque(false);
 		northPanel.add(itemName);
 		
 		itemImage = new ImageIcon("Images\\Blank.png");
 		atkStat = new JLabel("Atk: 0");
+		atkStat.setFont(GameController.GAME_FONT);
 		defStat = new JLabel("Def: 0");
+		defStat.setFont(GameController.GAME_FONT);
 		weight = new JLabel("Weight: 0");
+		weight.setFont(GameController.GAME_FONT);
 		value = new JLabel("Gold: 0");
+		value.setFont(GameController.GAME_FONT);
 		imageLabel = new JLabel(itemImage);
 		secondSetUp();
 	}
@@ -69,26 +72,24 @@ public class ItemPanel extends JPanel {
 		equippableSetUp(a);
 	}
 	
-	public ItemPanel(Food f) {
-		
-	}
-	
-	public ItemPanel(Drink d) {
-		
-	}
 	
 	public ItemPanel(Potion p) {
 		firstSetUp();		
 		itemName = new JLabel(p.getSimpleName());
+		itemName.setFont(GameController.GAME_FONT);
 		itemName.setBackground(GameController.BUTTON_COLOR_THEME);
 		northPanel.add(itemName);
 		
 		itemImage = new ImageIcon(p.getImageLocation());
 		
 		JLabel healthStat = new JLabel("Health: +" + p.getAmount());
+		healthStat.setFont(GameController.GAME_FONT);
 		amount = new JLabel("Amount: 1");
+		amount.setFont(GameController.GAME_FONT);
 		weight = new JLabel("Weight: " + numFormat.format(p.getWeight()));
+		weight.setFont(GameController.GAME_FONT);
 		value = new JLabel("Gold: " + p.getValue());
+		value.setFont(GameController.GAME_FONT);
 		imageLabel = new JLabel(itemImage);
 		imageLabel.setToolTipText(p.getItemToolTipText());
 		
@@ -103,6 +104,7 @@ public class ItemPanel extends JPanel {
 	private void equippableSetUp(Item i) {
 		firstSetUp();
 		itemName = new JLabel(i.getSimpleName());
+		itemName.setFont(GameController.GAME_FONT);
 		itemName.setBackground(GameController.BUTTON_COLOR_THEME);
 		northPanel.add(itemName);
 		
@@ -110,12 +112,15 @@ public class ItemPanel extends JPanel {
 		
 		itemImage = new ImageIcon(i.getImageLocation());
 		atkStat = new JLabel("Attack: " + i.getAtk());
+		atkStat.setFont(GameController.GAME_FONT);
 		defStat = new JLabel("Defense: " + i.getDef());
+		defStat.setFont(GameController.GAME_FONT);
 		weight = new JLabel("Weight: " + numFormat.format(i.getWeight()));
+		weight.setFont(GameController.GAME_FONT);
 		value = new JLabel("Gold: " + i.getValue());
+		value.setFont(GameController.GAME_FONT);
 		imageLabel = new JLabel(itemImage);
 		imageLabel.setToolTipText(i.getItemToolTipText());
-		
 
 		centerEastPanel.add(atkStat);
 		centerEastPanel.add(defStat);

@@ -3,6 +3,7 @@ package characters;
 import java.io.Serializable;
 import java.util.Random;
 import items.Item;
+import main.GameController;
 
 /**
  * Abstract character superclass for all characters appearing in the game.
@@ -64,6 +65,7 @@ public abstract class Character implements Serializable {
 	 */
 	public void lvlUp(int leftoverXP) {
 		this.lvl++;
+		//GameController.playSound(""); //TODO
 		Random r = new Random();
 		this.speed += r.nextInt(3);
 		this.atk += r.nextInt(2);

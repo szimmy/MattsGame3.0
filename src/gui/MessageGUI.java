@@ -47,10 +47,12 @@ public class MessageGUI extends JPanel {
 		southPanel.setBackground(GameController.BACKGROUND_COLOR_THEME);
 				
 		this.message = new JLabel(message);
+		this.message.setFont(new Font("Gentium Book Basic", Font.PLAIN, 28));
 		this.message.setOpaque(false);
 		this.message.setBackground(GameController.BACKGROUND_COLOR_THEME);
 		
 		exit = new JButton("Close");
+		exit.setFont(GameController.GAME_FONT);
 		exit.setBackground(GameController.BUTTON_COLOR_THEME);
 		exit.addActionListener(event -> currentView.removeMessagePanel(this));
 		

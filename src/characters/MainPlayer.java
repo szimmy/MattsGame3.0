@@ -1,16 +1,7 @@
 package characters;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.LinkedList;
-import java.util.Stack;
-
 import javax.swing.JOptionPane;
-
-import gui.MessageGUI;
 import items.Item;
 import items.Armor.Armor;
 import items.Armor.Boots;
@@ -19,8 +10,6 @@ import items.Armor.Gloves;
 import items.Armor.Helmet;
 import items.Armor.Legs;
 import items.Armor.Shield;
-import items.Consumables.Drink;
-import items.Consumables.Food;
 import items.Consumables.Potion;
 import items.Weapons.Weapon;
 
@@ -32,7 +21,6 @@ import items.Weapons.Weapon;
 public class MainPlayer extends Character {
 
 	private static final long serialVersionUID = -678393137554282967L;
-	private String currentImage = "Images\\Player\\PlayerNorth.png";
 	public static final String FACING_NORTH = "Images\\Player\\PlayerNorth.png";
 	public static final String FACING_SOUTH = "Images\\Player\\PlayerSouth.png";
 	public static final String FACING_EAST = "Images\\Player\\PlayerEast.png";
@@ -44,9 +32,6 @@ public class MainPlayer extends Character {
 	private final static int STARTING_DEF = 25;
 	private final static int STARTING_SPD = 25;
 	private final static int STARTING_MAX_CARRY = 150;
-	private final String FILE_NAME = "Saves\\player1.ser";
-	private final boolean APPEND_TO_FILE = true;
-	private final boolean DO_NOT_APPEND = false;
 	public final static int MAX_XP = 100;
 	private LinkedList<Item> inventory;
 	private int xp;
@@ -233,14 +218,6 @@ public class MainPlayer extends Character {
 		modifyCurrentHP(p.getAmount());
 	}
 	
-	public void consume(Food f) {
-		
-	}
-	
-	public void consume(Drink d) {
-		
-	}
-	
 	public LinkedList<Item> getInventory() {
 		return inventory;
 	}
@@ -286,10 +263,6 @@ public class MainPlayer extends Character {
 	public void removeSingleItem(Item i) {
 		this.inventory.remove(i);
 		this.modifyCurrentCarry(-i.getWeight());
-	}
-	
-	public void setCurrentImage(String image) {
-		this.currentImage = image;
 	}
 
 	public int getXp() {

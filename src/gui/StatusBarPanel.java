@@ -1,6 +1,9 @@
 package gui;
 
 import javax.swing.*;
+
+import main.GameController;
+
 import java.awt.*;
 
 public class StatusBarPanel extends JPanel {
@@ -12,6 +15,7 @@ public class StatusBarPanel extends JPanel {
 	
     public StatusBarPanel(String title, int current, int max) {
     	statusName = new JLabel(title);
+    	statusName.setFont(GameController.GAME_FONT);
         statusName.setFont(new Font(statusName.getFont().getName(), Font.BOLD, 14));
         statusName.setHorizontalAlignment(SwingConstants.CENTER);
         statusName.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -19,6 +23,7 @@ public class StatusBarPanel extends JPanel {
         
         bar = new JProgressBar();
         bar.setStringPainted(true);
+        bar.setFont(GameController.GAME_FONT);
 
         setBarValue(current, max);
         

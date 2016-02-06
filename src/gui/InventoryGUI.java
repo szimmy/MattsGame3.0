@@ -7,8 +7,6 @@ import characters.MainPlayer;
 import items.Item;
 import items.Armor.Armor;
 import items.Consumables.Consumable;
-import items.Consumables.Drink;
-import items.Consumables.Food;
 import items.Consumables.Potion;
 import items.Weapons.Weapon;
 import main.GameController;
@@ -41,6 +39,7 @@ public class InventoryGUI extends JPanel {
 	private JButton equip;
 	private JButton consume;
 	private ViewPanel currentView;
+	private JLabel title;
 	
 	/**
 	 * Constructor for the inventory GUI, must always send it the corresponding player
@@ -58,7 +57,10 @@ public class InventoryGUI extends JPanel {
 		westPanel.setOpaque(false);
 		northPanel = new JPanel();
 		northPanel.setOpaque(false);
-		northPanel.add(new JLabel(player.getName() + "'s Inventory"));
+		
+		title = new JLabel(player.getName() + "'s Inventory");
+		title.setFont(GameController.GAME_FONT);
+		northPanel.add(title);
 		centerPanel = new JPanel();
 		centerPanel.setOpaque(false);
 		centerPanel.setLayout(new GridLayout(0, 4, 25, 15));
@@ -66,6 +68,7 @@ public class InventoryGUI extends JPanel {
 		southPanel.setOpaque(false);
 
 		exit = new JButton("Exit");
+		exit.setFont(GameController.GAME_FONT);
 		exit.setBackground(GameController.BUTTON_COLOR_THEME);
 		exit.addActionListener(event -> {
 			currentView.removeInventoryPanel(this);
@@ -107,7 +110,11 @@ public class InventoryGUI extends JPanel {
 			btnPanel.setOpaque(false);
 
 			itemPanel.setLayout(new GridLayout(0, 1));
-			btnPanel.setLayout(new FlowLayout());
+			
+			JPanel formatPanel = new JPanel();
+			formatPanel.setOpaque(false);
+			
+			btnPanel.setLayout(new GridLayout(1,2));
 			if(i instanceof Weapon) {
 				itemPanel.add(new ItemPanel((Weapon) i));
 			}
@@ -123,6 +130,7 @@ public class InventoryGUI extends JPanel {
 				 * Block for all weapons and armor AKA equippables
 				 */
 				equip = new JButton("Equip");
+				equip.setFont(GameController.GAME_FONT);
 				equip.setBackground(GameController.BUTTON_COLOR_THEME);
 				equip.addActionListener(event -> {
 					if (i instanceof Weapon) {
@@ -131,24 +139,21 @@ public class InventoryGUI extends JPanel {
 						player.equip((Armor) i);
 					}
 					redrawInventory();
-					//player.toggleMessagePanel(new MessageGUI("Equipped " + i.getSimpleName() + ". ", player));
+					currentView.displayMessagePanel("Equipped " + i.getSimpleName() + ". ");
 				});
-
+				
 				btnPanel.add(equip);
+
 			}
 			else if(i instanceof Consumable) {
 				consume = new JButton("Consume");
+				consume.setFont(GameController.GAME_FONT);
 				consume.setBackground(GameController.BUTTON_COLOR_THEME);
 				consume.addActionListener(event -> {
 					if (i instanceof Potion) {
 						player.consume((Potion) i);
-						//player.toggleMessagePanel(new MessageGUI("Restored " + ((Potion) i).getAmount() + " health.", player));
-					} else if (i instanceof Food) {
-						player.consume((Food) i);
-					} else if (i instanceof Drink) { 
-						player.consume((Drink) i);
-					}
-					
+						currentView.displayMessagePanel("Restored " + ((Potion) i).getAmount() + " health.");
+					} 					
 					redrawInventory();
 				});
 
@@ -156,6 +161,7 @@ public class InventoryGUI extends JPanel {
 			}
 
 			drop = new JButton("Drop");
+			drop.setFont(GameController.GAME_FONT);
 			drop.setBackground(GameController.BUTTON_COLOR_THEME);
 			drop.addActionListener(event -> {
 				if (JOptionPane.showConfirmDialog(null,
@@ -168,9 +174,9 @@ public class InventoryGUI extends JPanel {
 			});
 
 			btnPanel.add(drop);
-
+			formatPanel.add(btnPanel);
 			itemButtonGroupPanel.add(itemPanel);
-			itemButtonGroupPanel.add(btnPanel);
+			itemButtonGroupPanel.add(formatPanel);
 			centerPanel.add(itemButtonGroupPanel);
 			this.revalidate();
 			this.repaint();

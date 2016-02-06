@@ -109,6 +109,7 @@ public class ViewPanel extends JPanel implements ActionListener {
 		lootables.add(new Lootable(500, 500));
 		lootables.add(new Lootable(300, 300));
 		genericObstacles.add(new GenericObstacle(550, 200));
+		genericObstacles.add(new GenericObstacle(200, 200));
 		genericObstacles.add(new GenericObstacle(400, 400, "Images\\testgif.gif"));
 		obstacles.add(new Save(200, 600));
 
@@ -203,10 +204,6 @@ public class ViewPanel extends JPanel implements ActionListener {
 			timer.stop();
 		}
 	}
-
-	private void updateNPC() {
-		
-	}
 	
 	public void move(Sprite sprite) {
 
@@ -241,6 +238,10 @@ public class ViewPanel extends JPanel implements ActionListener {
 		}
 	}
 
+	private void updateNPC() {
+		
+	}
+	
 	public void displayLootPanel(LinkedList<Item> items) {
 		LootGUI loot = new LootGUI(items, player.getMainPlayer(), this);
 		if (!lootCurrentlyDisplayed) {

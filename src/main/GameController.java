@@ -3,19 +3,30 @@ package main;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.FontUIResource;
 
 import characters.Enemy;
 import gui.ImagePanel;
 import gui.ViewPanel;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.layout.Border;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class GameController extends JFrame {
 
@@ -25,6 +36,10 @@ public class GameController extends JFrame {
 	public static double voiceVolume = .8;
 	public static double effectVolume = .5;
 	public static double musicVolume = .2;
+	public static final Font GAME_FONT = new Font("Gentium Book Basic", Font.PLAIN, 14);
+	
+	private static Media sound;
+	private static MediaPlayer soundPlayer;
 	
 	
 	public static final String[] FEMALE_FIRST_NAMES = { "Mary", "Elizabeth", "Jennifer", "Maria", "Nancy", "Michelle", "Sarah", "Kim",
@@ -45,7 +60,11 @@ public class GameController extends JFrame {
 			"Jenkins", "Nufrio", "Leong", "Gimbut", "Trump" };
 	
     public GameController() {
-        
+    	UIManager.put("ToolTip.font", new FontUIResource(GAME_FONT));
+    	UIManager.put("ToolTip.background", new ColorUIResource(BUTTON_COLOR_THEME));
+    	javax.swing.border.Border border = BorderFactory.createLineBorder(new Color(0,0,0));
+    	UIManager.put("ToolTip.border", border);
+    	ToolTipManager.sharedInstance().setDismissDelay(15000);
         initUI();
     }
     
@@ -87,6 +106,8 @@ public class GameController extends JFrame {
 		Random rand = new Random();
 		int random = rand.nextInt(2);
 		
+		//Definitely random
+		//This totally makes sense
 		if (random == 0) {
 			return 5;
 		}
@@ -95,6 +116,14 @@ public class GameController extends JFrame {
 		}
 	}
 
+	public static void playSound(String fileLocation) {
+		JFXPanel panel = new JFXPanel();
+		sound = new Media(Paths.get(fileLocation).toUri().toString());
+		soundPlayer = new MediaPlayer(sound);
+		soundPlayer.play();
+		soundPlayer.setVolume(effectVolume);		
+	}
+	
     public static void main(String[] args) {
         
         EventQueue.invokeLater(new Runnable() {

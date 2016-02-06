@@ -50,6 +50,7 @@ public class LootGUI extends JPanel {
 		centerPanel.setLayout(new FlowLayout());
 		
 		takeAll = new JButton("Take all");
+		takeAll.setFont(GameController.GAME_FONT);
 		takeAll.setBackground(GameController.BUTTON_COLOR_THEME);
 		takeAll.addActionListener(event -> {
 			for(Item i : items) {
@@ -64,6 +65,7 @@ public class LootGUI extends JPanel {
 		});
 				
 		exit = new JButton("Exit");
+		exit.setFont(GameController.GAME_FONT);
 		exit.setBackground(GameController.BUTTON_COLOR_THEME);
 		exit.addActionListener(event -> currentView.removeLootPanel(this));
 		southPanel.add(exit);
@@ -83,10 +85,11 @@ public class LootGUI extends JPanel {
 			}
 			
 			JButton take = new JButton("Take");
+			take.setFont(GameController.GAME_FONT);
 			take.setBackground(GameController.BUTTON_COLOR_THEME);
 			take.addActionListener(event -> {
 				if(!player.addItem(i)) {
-					//TODO: //player.toggleMessagePanel(new MessageGUI("You cannot carry that.", player));
+					currentView.displayMessagePanel("You cannot carry that.");
 				}
 				items.remove(i);
 				take.setEnabled(false);
@@ -102,6 +105,7 @@ public class LootGUI extends JPanel {
 		checkIfEmpty();
 		
 		this.setBackground(GameController.BACKGROUND_COLOR_THEME);
+		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 		this.add(northPanel, BorderLayout.NORTH);
 		this.add(centerPanel, BorderLayout.CENTER);
 		this.add(southPanel, BorderLayout.SOUTH);		

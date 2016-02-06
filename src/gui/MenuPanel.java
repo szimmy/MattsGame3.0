@@ -25,6 +25,7 @@ public class MenuPanel extends JPanel {
 		this.currentView = currentView;
 		
 		inventory = new JButton("Inventory");
+		inventory.setFont(GameController.GAME_FONT);
 		inventory.setBackground(GameController.BUTTON_COLOR_THEME);
 		inventory.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		inventory.addActionListener(event -> {
@@ -34,6 +35,7 @@ public class MenuPanel extends JPanel {
 		
 		exit = new JButton("Exit");
 		exit.setBackground(GameController.BUTTON_COLOR_THEME);
+		exit.setFont(GameController.GAME_FONT);
 		exit.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		exit.addActionListener(event -> {
 			currentView.toggleMenu();
@@ -41,6 +43,7 @@ public class MenuPanel extends JPanel {
 		
 		stats = new JButton("Stats");
 		stats.setBackground(GameController.BUTTON_COLOR_THEME);
+		stats.setFont(GameController.GAME_FONT);
 		stats.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		stats.addActionListener(event -> {
 			currentView.displayStatsPanel(currentView.getPlayer().getMainPlayer());
@@ -49,6 +52,7 @@ public class MenuPanel extends JPanel {
 		
 		options = new JButton("Options");
 		options.setBackground(GameController.BUTTON_COLOR_THEME);
+		options.setFont(GameController.GAME_FONT);
 		options.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		options.addActionListener(event ->  {
 			currentView.displaySettingsPanel(currentView.getPlayer().getMainPlayer());
@@ -57,6 +61,7 @@ public class MenuPanel extends JPanel {
 		
 		load = new JButton("Load");
 		load.setBackground(GameController.BUTTON_COLOR_THEME);
+		load.setFont(GameController.GAME_FONT);
 		load.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		load.addActionListener(event -> {
 			currentView.toggleMenu();
@@ -73,6 +78,7 @@ public class MenuPanel extends JPanel {
 		
 		quit = new JButton("Quit");
 		quit.setBackground(GameController.BUTTON_COLOR_THEME);
+		quit.setFont(GameController.GAME_FONT);
 		quit.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		quit.addActionListener(event -> {
 			currentView.getController().dispose();
@@ -80,8 +86,8 @@ public class MenuPanel extends JPanel {
 		
 		innerPanel = new JPanel();
 		innerPanel.setOpaque(false);
-		innerPanel.setLayout(new GridLayout(0, 1));		
-		innerPanel.add(Box.createVerticalStrut(3));
+		innerPanel.setLayout(new GridLayout(0, 1));	
+		innerPanel.add(Box.createVerticalStrut(0));
 		innerPanel.add(stats);
 		innerPanel.add(Box.createVerticalStrut(BUTTON_DISTANCE));
 		innerPanel.add(inventory);
@@ -94,11 +100,10 @@ public class MenuPanel extends JPanel {
 		innerPanel.add(Box.createVerticalStrut(BUTTON_DISTANCE));
 		innerPanel.add(quit);
 		
-		
 		this.setBackground(GameController.BACKGROUND_COLOR_THEME);		
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		this.add(innerPanel);
-		this.setSize(100, 300);
+		this.setSize(100, 320);
 		this.setOpaque(true);
 		this.setVisible(true);
 		this.repaint();

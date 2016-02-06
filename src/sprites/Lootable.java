@@ -19,6 +19,8 @@ public class Lootable extends Sprite {
 		items = Item.generateRandomItem(4);
 	}
 	
+	//TODO: Make constructor for different images
+	
 	public Lootable(int x, int y, LinkedList<Item> items) {
 		super(x, y);
 		loadImage("Images\\ChestArea.png");
