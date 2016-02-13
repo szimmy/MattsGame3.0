@@ -206,6 +206,7 @@ public class BattleGUI extends JPanel {
 		
 		northPanel.add(info);
 		
+		//Makes background music repeat
 		musicPlayer.setOnEndOfMedia(new Runnable() {
 			@Override
 			public void run() {

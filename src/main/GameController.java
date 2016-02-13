@@ -123,16 +123,4 @@ public class GameController extends JFrame {
 		soundPlayer.play();
 		soundPlayer.setVolume(effectVolume);		
 	}
-	
-    public static void main(String[] args) {
-        
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-            	GameController ex = new GameController();
-            	ex.getContentPane().setLayout(null);
-                ex.setVisible(true);
-            }
-        });
-    }
 }

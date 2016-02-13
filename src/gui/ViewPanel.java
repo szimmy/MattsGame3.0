@@ -11,13 +11,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
-
 import javax.swing.*;
-
 import characters.Enemy;
 import characters.MainPlayer;
 import items.Item;

@@ -59,7 +59,7 @@ public abstract class Item implements Serializable {
 			this.atk = (int) Math.round((atk * (Item.rarityMultiplier(howRare)))) + random;
 			this.def = (int) Math.round((def * (Item.rarityMultiplier(howRare))));
 		}
-		else if (this instanceof Armor){
+		else if (this instanceof Armor) {
 			this.atk = (int) Math.round((atk * (Item.rarityMultiplier(howRare))));
 			this.def = (int) Math.round((def * (Item.rarityMultiplier(howRare)))) + random;
 		}
