@@ -32,8 +32,8 @@ public class ViewPanel extends JPanel implements ActionListener {
 	private boolean ingame;
 	public static final int PLAYER_X = 44;
 	public static final int PLAYER_Y = 39;
-	public static final int B_WIDTH = 1280;
-	public static final int B_HEIGHT = 1024;
+	public static final int B_WIDTH = 1056;
+	public static final int B_HEIGHT = 730;
 	private final int DELAY = 15;
 	private ArrayList<Lootable> lootables;
 	private ArrayList<GenericObstacle> genericObstacles;
@@ -49,6 +49,8 @@ public class ViewPanel extends JPanel implements ActionListener {
 	private MenuPanel menu;
 	private final static String FILE_NAME = "Saves\\save01.ser";
 	private final static boolean DO_NOT_APPEND = false;
+	private GridBagLayout gridbag;
+	private GridBagConstraints centerConstraints;
 
 	public ViewPanel(GameController control) {
 		initFlags();
@@ -105,10 +107,23 @@ public class ViewPanel extends JPanel implements ActionListener {
 		lootables = new ArrayList<Lootable>();
 		lootables.add(new Lootable(500, 500));
 		lootables.add(new Lootable(300, 300));
-		genericObstacles.add(new GenericObstacle(550, 200));
-		genericObstacles.add(new GenericObstacle(200, 200));
-		genericObstacles.add(new GenericObstacle(400, 400, "Images\\testgif.gif"));
-		obstacles.add(new Save(200, 600));
+		for(int i = 0; i < 23; i++) {
+			genericObstacles.add(new GenericObstacle(i*45, 0));
+			genericObstacles.add(new GenericObstacle(i*45, 651));
+		}
+		for(int i = 1; i < 15; i++) {
+			genericObstacles.add(new GenericObstacle(0, i*40+2));
+		}
+		for(int i = 1; i < 16; i++) {
+				genericObstacles.add(new GenericObstacle(990, (i*40)+2));
+		}
+		genericObstacles.add(new GenericObstacle(245, 145));
+		genericObstacles.add(new GenericObstacle(498, 438));
+		genericObstacles.add(new GenericObstacle(149, 514));
+		genericObstacles.add(new GenericObstacle(648, 189));
+		genericObstacles.add(new GenericObstacle(168, 465));
+
+		obstacles.add(new Save(600, 600));
 
 	}
 
@@ -119,14 +134,26 @@ public class ViewPanel extends JPanel implements ActionListener {
 		setBackground(Color.BLACK);
 		ingame = true;
 		menu = new MenuPanel(this);
+		
+		
+		gridbag = new GridBagLayout();
+		centerConstraints = new GridBagConstraints();
+		centerConstraints.fill = GridBagConstraints.CENTER;
+		
+		gridbag.setConstraints(this, centerConstraints);
+		
+		//GridBagConstraints constraints = new GridBagConstraints();
+		//constraints.fill = GridBagConstraints.NORTHWEST;
+		//gridbag.setConstraints(this, constraints);
 
+		this.setLayout(gridbag);
+		
 		setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
 
 		if (player == null) {
 			player = new Player(500, 100, new MainPlayer("Matthew"), this);
 		}
 
-		this.setLayout(null);
 		determineObstacles();
 
 		timer = new Timer(DELAY, this);
@@ -136,16 +163,11 @@ public class ViewPanel extends JPanel implements ActionListener {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
 		if (ingame) {
-
 			drawObjects(g);
-
 		} else {
-
 			drawGameOver(g);
 		}
-
 		Toolkit.getDefaultToolkit().sync();
 	}
 
@@ -243,7 +265,7 @@ public class ViewPanel extends JPanel implements ActionListener {
 		LootGUI loot = new LootGUI(items, player.getMainPlayer(), this);
 		if (!lootCurrentlyDisplayed) {
 			lootCurrentlyDisplayed = true;
-			addPanel(loot);
+			addPanel(loot, null);
 			loot.setLocation(B_WIDTH / 3, B_HEIGHT / 3);
 		} 
 	}
@@ -256,7 +278,13 @@ public class ViewPanel extends JPanel implements ActionListener {
 	public void toggleMenu() {
 		if (!menuCurrentlyDisplayed && !engaged()) {
 			menuCurrentlyDisplayed = true;
-			addPanel(menu);
+			GridBagConstraints c = new GridBagConstraints();
+			c = new GridBagConstraints();
+			//c.fill = GridBagConstraints.HORIZONTAL;
+			c.anchor = GridBagConstraints.NORTHWEST;
+			c.weightx = 1;
+			c.weighty = 1;
+			addPanel(menu, c);
 			menu.setLocation(0, 0);
 		} else {
 			menuCurrentlyDisplayed = false;
@@ -268,8 +296,8 @@ public class ViewPanel extends JPanel implements ActionListener {
 		BattleGUI battlePanel = new BattleGUI(player.getMainPlayer(), enemies, this, null);
 		if (!battleCurrentlyDisplayed) {
 			battleCurrentlyDisplayed = true;
-			addPanel(battlePanel);
-			battlePanel.setLocation(100, 100);
+			addPanel(battlePanel, null);
+			battlePanel.setLocation(280, 290);
 		}
 	}
 	
@@ -282,8 +310,8 @@ public class ViewPanel extends JPanel implements ActionListener {
 		InventoryGUI invPanel = new InventoryGUI(player.getMainPlayer(), this);
 		if (!inventoryCurrentlyDisplayed) {
 			inventoryCurrentlyDisplayed = true;
-			addPanel(invPanel);
-			invPanel.setLocation(300, 300);
+			addPanel(invPanel, null);
+			invPanel.setLocation(225, 240);
 		}
 	}
 	
@@ -296,8 +324,8 @@ public class ViewPanel extends JPanel implements ActionListener {
 		SettingsGUI settings = new SettingsGUI(player, this);
 		if (!settingsCurrentlyDisplayed) {
 			settingsCurrentlyDisplayed = true;
-			addPanel(settings);
-			settings.setLocation(300, 300);
+			addPanel(settings, null);
+			settings.setLocation(375, 300);
 		}
 	}
 	
@@ -310,8 +338,8 @@ public class ViewPanel extends JPanel implements ActionListener {
 		PlayerInfoGUI info = new PlayerInfoGUI(player, this);
 		if (!statsCurrentlyDisplayed) {
 			statsCurrentlyDisplayed = true;
-			addPanel(info);
-			info.setLocation(300, 300);
+			addPanel(info, null);
+			info.setLocation(310, 250);
 		}
 	}
 	
@@ -324,14 +352,23 @@ public class ViewPanel extends JPanel implements ActionListener {
 		MessageGUI messagePanel = new MessageGUI(message, player.getMainPlayer(), this);
 		if (!messageCurrentlyDisplayed) {
 			messageCurrentlyDisplayed = true;
-			addPanel(messagePanel);
-			messagePanel.setLocation(0, 800);
+			GridBagConstraints c = new GridBagConstraints();
+			c = new GridBagConstraints();
+			//c.fill = GridBagConstraints.HORIZONTAL;
+			c.weightx = 1;
+			c.weighty = 1;
+			addPanel(messagePanel, c);
+			messagePanel.setLocation(0, 960);
+			messagePanel.setFocusable(true);
+			messagePanel.requestFocusInWindow();
 		}
 	}
 	
 	public void removeMessagePanel(MessageGUI message) {
 		messageCurrentlyDisplayed = false;
 		removePanel(message);
+		this.setFocusable(true);
+		this.requestFocusInWindow();
 	}
 
 	private void removePanel(JPanel panel) {
@@ -340,8 +377,12 @@ public class ViewPanel extends JPanel implements ActionListener {
 		this.revalidate();
 	}
 
-	private void addPanel(JPanel panel) {
-		this.add(panel);
+	private void addPanel(JPanel panel, GridBagConstraints c) {
+		if(c != null) {
+			this.add(panel, c);
+		} else {
+			this.add(panel);
+		}
 		this.repaint();
 		this.revalidate();
 	}
@@ -362,33 +403,6 @@ public class ViewPanel extends JPanel implements ActionListener {
 
 	public Player getPlayer() {
 		return player;
-	}
-
-	public void serialize() {
-		ArrayList<Sprite> toSave = new ArrayList<Sprite>();
-		toSave.add(player);
-		toSave.addAll(obstacles);
-
-		try (FileOutputStream fs = new FileOutputStream(FILE_NAME, DO_NOT_APPEND);
-				ObjectOutputStream os = new ObjectOutputStream(fs)) {
-			os.writeObject(toSave);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static ArrayList<Sprite> deserialize() {
-		try (FileInputStream fs = new FileInputStream(FILE_NAME); ObjectInputStream os = new ObjectInputStream(fs)) {
-			return (ArrayList<Sprite>) os.readObject();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		// If the deserialize fails return null
-		return null;
 	}
 
 	private void interact(int x, int y) {
@@ -421,6 +435,33 @@ public class ViewPanel extends JPanel implements ActionListener {
 				return true;
 		}
 		return false;
+	}
+	
+	public void serialize() {
+		ArrayList<Sprite> toSave = new ArrayList<Sprite>();
+		toSave.add(player);
+		toSave.addAll(obstacles);
+
+		try (FileOutputStream fs = new FileOutputStream(FILE_NAME, DO_NOT_APPEND);
+				ObjectOutputStream os = new ObjectOutputStream(fs)) {
+			os.writeObject(toSave);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static ArrayList<Sprite> deserialize() {
+		try (FileInputStream fs = new FileInputStream(FILE_NAME); ObjectInputStream os = new ObjectInputStream(fs)) {
+			return (ArrayList<Sprite>) os.readObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// If the deserialize fails return null
+		return null;
 	}
 
 	private class TAdapter extends KeyAdapter {

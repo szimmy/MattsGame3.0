@@ -85,7 +85,7 @@ public class GameController extends JFrame {
         setTitle("Collision");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(new Dimension(1280,1024)); 	
+        setSize(new Dimension(ViewPanel.B_WIDTH,ViewPanel.B_HEIGHT)); 	
     }
     
 	public static ArrayList<Enemy> getRandomEnemies(int maxNumEnemies) {

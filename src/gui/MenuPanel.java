@@ -82,23 +82,25 @@ public class MenuPanel extends JPanel {
 		quit.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		quit.addActionListener(event -> {
 			currentView.getController().dispose();
+			System.exit(0);
 		});
 		
 		innerPanel = new JPanel();
 		innerPanel.setOpaque(false);
 		innerPanel.setLayout(new GridLayout(0, 1));	
-		innerPanel.add(Box.createVerticalStrut(0));
+		innerPanel.add(Box.createVerticalStrut(MenuPanel.BUTTON_DISTANCE));
 		innerPanel.add(stats);
-		innerPanel.add(Box.createVerticalStrut(BUTTON_DISTANCE));
+		innerPanel.add(Box.createVerticalStrut(MenuPanel.BUTTON_DISTANCE));
 		innerPanel.add(inventory);
-		innerPanel.add(Box.createVerticalStrut(BUTTON_DISTANCE));
+		innerPanel.add(Box.createVerticalStrut(MenuPanel.BUTTON_DISTANCE));
 		innerPanel.add(options);
-		innerPanel.add(Box.createVerticalStrut(BUTTON_DISTANCE));
+		innerPanel.add(Box.createVerticalStrut(MenuPanel.BUTTON_DISTANCE));
 		innerPanel.add(load);
-		innerPanel.add(Box.createVerticalStrut(BUTTON_DISTANCE));
+		innerPanel.add(Box.createVerticalStrut(MenuPanel.BUTTON_DISTANCE));
 		innerPanel.add(exit);
-		innerPanel.add(Box.createVerticalStrut(BUTTON_DISTANCE));
+		innerPanel.add(Box.createVerticalStrut(MenuPanel.BUTTON_DISTANCE));
 		innerPanel.add(quit);
+		innerPanel.add(Box.createVerticalStrut(MenuPanel.BUTTON_DISTANCE));
 		
 		this.setBackground(GameController.BACKGROUND_COLOR_THEME);		
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));

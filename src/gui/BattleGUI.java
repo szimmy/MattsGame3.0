@@ -125,7 +125,7 @@ public class BattleGUI extends JPanel {
 		enemyHealthBars = new StatusBarPanel[enemies.size()];
 		info = new JLabel("Select an enemy to begin combat.");
 		info.setFont(GameController.GAME_FONT);
-		info.setForeground(GameController.BUTTON_COLOR_THEME);
+		info.setForeground(Color.BLACK);
 		info.setOpaque(false);
 		northPanel = new JPanel();
 		northPanel.setOpaque(false);
@@ -223,7 +223,7 @@ public class BattleGUI extends JPanel {
 		this.add(northPanel, BorderLayout.CENTER);
 		this.add(playerOptions, BorderLayout.SOUTH);
 		this.add(battlePanel, BorderLayout.NORTH);
-		this.setSize(new Dimension(800, 600));
+		this.setSize(new Dimension(700, 300));
 		this.setVisible(true);
 		this.repaint();
 	}

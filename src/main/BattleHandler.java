@@ -99,9 +99,7 @@ public class BattleHandler {
 				//the enemy is dead and the exception is handled appropriately.
 				battle.getEnemyHealthBars()[enemyIndex].setBarValue(defender.getCurrentHP(), defender.getMaxHP());
 			}
-			catch (ArrayIndexOutOfBoundsException e) {
-				System.out.println("No enemies left to adjust!");
-			}
+			catch (ArrayIndexOutOfBoundsException e) {}
 		}
 	}
 	
@@ -147,7 +145,7 @@ public class BattleHandler {
 			if (battle.getEnemyAttackSlowCounter().isRunning()) {
 				battle.getEnemyAttackSlowCounter().stop(); 
 			}
-
+		battle.getInfoLabel().setText("Game over!");
 		battle.getLeave().setEnabled(true);
 	}
 	
@@ -161,7 +159,6 @@ public class BattleHandler {
 		battle.getEnemies().remove(defender);
 		battle.resetSelectedEnemy();
 		int xpGain = (defender.getLvl() + defender.getAtk() + defender.getDef() + defender.getSpeed())*3;
-		System.out.println(xpGain);
 		modifyXPValue((MainPlayer) attacker, xpGain);
 		defender = null;
 	}
