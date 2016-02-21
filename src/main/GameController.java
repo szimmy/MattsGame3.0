@@ -82,7 +82,7 @@ public class GameController extends JFrame {
         setResizable(false);
         pack();
         
-        setTitle("Collision");
+        setTitle("Matt's Game 3.0");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(new Dimension(ViewPanel.B_WIDTH,ViewPanel.B_HEIGHT)); 	

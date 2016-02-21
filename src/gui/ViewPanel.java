@@ -468,24 +468,24 @@ public class ViewPanel extends JPanel implements ActionListener {
 		@Override
 		public void keyReleased(KeyEvent e) {
 			int key = e.getKeyCode();
-			if (key == KeyEvent.VK_SHIFT) {
+			if (key == KeyEvent.VK_T) {
 				toggleMenu();
 			} else {
 				switch (key) {
 
-				case KeyEvent.VK_SPACE:
+				case KeyEvent.VK_SHIFT:
 					player.setSpriteSpeed(2);
 					break;
-				case KeyEvent.VK_LEFT:
+				case KeyEvent.VK_A:
 					player.setDX(0);
 					break;
-				case KeyEvent.VK_RIGHT:
+				case KeyEvent.VK_D:
 					player.setDX(0);
 					break;
-				case KeyEvent.VK_UP:
+				case KeyEvent.VK_W:
 					player.setDY(0);
 					break;
-				case KeyEvent.VK_DOWN:
+				case KeyEvent.VK_S:
 					player.setDY(0);
 					break;
 				}
@@ -498,7 +498,7 @@ public class ViewPanel extends JPanel implements ActionListener {
 
 			if (!engaged()) {
 				switch (key) {
-				case KeyEvent.VK_ENTER:
+				case KeyEvent.VK_E:
 					if (player.getImageLocation().equals(MainPlayer.FACING_NORTH)) {
 						interact(player.getX(), player.getY() - ViewPanel.PLAYER_Y);
 					} else if (player.getImageLocation().equals(MainPlayer.FACING_SOUTH)) {
@@ -510,29 +510,29 @@ public class ViewPanel extends JPanel implements ActionListener {
 					}
 					break;
 
-				case KeyEvent.VK_SPACE:
+				case KeyEvent.VK_SHIFT:
 					player.setSpriteSpeed(4);
 					break;
 
-				case KeyEvent.VK_LEFT:
+				case KeyEvent.VK_A:
 					player.setDX(-player.getSpriteSpeed());
 					player.loadImage(MainPlayer.FACING_WEST);
 					enemyEncounter();
 					break;
 
-				case KeyEvent.VK_RIGHT:
+				case KeyEvent.VK_D:
 					player.setDX(player.getSpriteSpeed());
 					player.loadImage(MainPlayer.FACING_EAST);
 					enemyEncounter();
 					break;
 
-				case KeyEvent.VK_UP:
+				case KeyEvent.VK_W:
 					player.setDY(-player.getSpriteSpeed());
 					player.loadImage(MainPlayer.FACING_NORTH);
 					enemyEncounter();
 					break;
 
-				case KeyEvent.VK_DOWN:
+				case KeyEvent.VK_S:
 					player.setDY(player.getSpriteSpeed());
 					player.loadImage(MainPlayer.FACING_SOUTH);
 					enemyEncounter();
