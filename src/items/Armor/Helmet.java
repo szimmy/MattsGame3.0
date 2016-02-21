@@ -12,7 +12,7 @@ public class Helmet  extends Armor {
 	
 	public Helmet() {
 		super(0, 6, 1, 3, 0, 80, Item.randomRareness(), Armor.getRandomArmorType());
-		this.setImageLocation("Images\\Armors\\" + this.getArmorType().toString() + "\\Down\\Helmet.png");
+		this.setImageLocation("Images\\Armors\\" + this.getArmorType().toString() + "\\Helmet.png");
 	}
 
 	@Override

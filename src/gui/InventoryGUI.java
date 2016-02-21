@@ -97,7 +97,6 @@ public class InventoryGUI extends JPanel {
 		this.setBackground(GameController.BACKGROUND_COLOR_THEME);
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		this.setVisible(true);
-		this.setSize(new Dimension(750, 450));
 		this.setMinimumSize(new Dimension(750, 300));
 		this.repaint();
 	}

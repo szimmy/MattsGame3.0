@@ -12,7 +12,8 @@ public class Boots extends Armor {
 
 	public Boots() {
 		super(0, 3, 1, 3.0, 0, 65, Item.randomRareness(), Armor.getRandomArmorType());
-		this.setImageLocation("Images\\Armors\\" + this.getArmorType().toString() + "\\Down\\Boots.png");
+		this.setImageLocation("Images\\Armors\\Wood\\boots wood 32.png");
+		//this.setImageLocation("Images\\Armors\\" + this.getArmorType().toString() + "\\Down\\Boots.png");
 	}
 
 	@Override

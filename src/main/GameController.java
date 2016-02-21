@@ -36,7 +36,7 @@ public class GameController extends JFrame {
 	public static double voiceVolume = .8;
 	public static double effectVolume = .5;
 	public static double musicVolume = .2;
-	public static final Font GAME_FONT = new Font("Gentium Book Basic", Font.PLAIN, 14);
+	public static final Font GAME_FONT = new Font("Cambria", Font.PLAIN, 14);
 	
 	private static Media sound;
 	private static MediaPlayer soundPlayer;

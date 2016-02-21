@@ -300,7 +300,7 @@ public class BattleGUI extends JPanel {
 			secondLevelFormatter.setOpaque(false);
 			enemyFormatter.setLayout(new GridLayout(3, 1));
 			enemyFormatter.add(name);
-			enemyFormatter.add(new JLabel(new ImageIcon("Images\\Enemies\\Enemy0.png")));
+			enemyFormatter.add(new JLabel(new ImageIcon("Images\\Enemies\\Enemy" + rand.nextInt(4) +".png")));
 			enemyFormatter.add(enemyHealth);
 			enemiesLeft++;
 			if(enemy.getSelected()) {
