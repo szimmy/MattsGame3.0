@@ -1,5 +1,5 @@
 # MattsGame3.0
-Retro RPG stype game completely from scratch. 
+Retro RPG style game made completely from scratch. 
 Final name still undecided as we are still in very early alpha stages of development.
 No game-making tools or external libraries used. 
 I wanted to challenge myself while learning more about program design, so I started making this game for fun in my free time.
