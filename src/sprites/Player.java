@@ -21,8 +21,8 @@ import main.GameController;
 public class Player extends Sprite {
 	
 	private MainPlayer player;
-
-	public Player(int x, int y, MainPlayer player, ViewPanel currentView) {
+	
+	public Player(int x, int y, MainPlayer player) {
 		super(x, y);
 		this.player = player;
 		initPlayer();
@@ -33,10 +33,10 @@ public class Player extends Sprite {
         loadImage("Images\\Player\\PlayerSouth.png");
         getImageDimensions();
     }
-    
+ 
     public MainPlayer getMainPlayer() {
     	return player;
-    }  
+    }
 }
     
 

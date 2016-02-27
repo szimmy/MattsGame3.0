@@ -2,7 +2,6 @@ package main;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,7 +13,6 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
@@ -24,7 +22,6 @@ import characters.Enemy;
 import gui.ImagePanel;
 import gui.ViewPanel;
 import javafx.embed.swing.JFXPanel;
-import javafx.scene.layout.Border;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -104,16 +101,7 @@ public class GameController extends JFrame {
 	
 	public static int getRandomSpeed() {
 		Random rand = new Random();
-		int random = rand.nextInt(2);
-		
-		//Definitely random
-		//This totally makes sense
-		if (random == 0) {
-			return 5;
-		}
-		else {
-			return 40;
-		}
+		return rand.nextInt(50);
 	}
 
 	public static void playSound(String fileLocation) {

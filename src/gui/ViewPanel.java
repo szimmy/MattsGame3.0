@@ -19,8 +19,9 @@ import characters.Enemy;
 import characters.MainPlayer;
 import items.Item;
 import main.GameController;
-import sprites.GenericObstacle;
+import main.MapParser;
 import sprites.Lootable;
+import sprites.NPC;
 import sprites.Player;
 import sprites.Save;
 import sprites.Sprite;
@@ -35,9 +36,7 @@ public class ViewPanel extends JPanel implements ActionListener {
 	public static final int B_WIDTH = 1056;
 	public static final int B_HEIGHT = 730;
 	private final int DELAY = 15;
-	private ArrayList<Lootable> lootables;
-	private ArrayList<GenericObstacle> genericObstacles;
-	private ArrayList<Sprite> obstacles;
+	private ArrayList<Sprite> mapItems;
 	private GameController control;
 	private boolean menuCurrentlyDisplayed;
 	private boolean battleCurrentlyDisplayed;
@@ -72,19 +71,7 @@ public class ViewPanel extends JPanel implements ActionListener {
 		this.player = (Player) sprites.get(0);
 		sprites.remove(0);
 
-		obstacles = new ArrayList<Sprite>();
-		genericObstacles = new ArrayList<GenericObstacle>();
-		lootables = new ArrayList<Lootable>();
-
-		for (Sprite sprite : sprites) {
-			if (sprite instanceof GenericObstacle) {
-				genericObstacles.add((GenericObstacle) sprite);
-			} else if (sprite instanceof Lootable) {
-				lootables.add((Lootable) sprite);
-			} else {
-				obstacles.add(sprite);
-			}
-		}
+		mapItems = new ArrayList<Sprite>();
 
 		initFlags();
 		initPanel();
@@ -102,29 +89,12 @@ public class ViewPanel extends JPanel implements ActionListener {
 	}
 
 	private void initCollections() {
-		obstacles = new ArrayList<Sprite>();
-		genericObstacles = new ArrayList<GenericObstacle>();
-		lootables = new ArrayList<Lootable>();
-		lootables.add(new Lootable(500, 500));
-		lootables.add(new Lootable(300, 300));
-		for(int i = 0; i < 23; i++) {
-			genericObstacles.add(new GenericObstacle(i*45, 0));
-			genericObstacles.add(new GenericObstacle(i*45, 651));
+		try {
+			mapItems = MapParser.parseMap(0, 0);
 		}
-		for(int i = 1; i < 15; i++) {
-			genericObstacles.add(new GenericObstacle(0, i*40+2));
+		catch(Exception e) {
+			e.printStackTrace();
 		}
-		for(int i = 1; i < 16; i++) {
-				genericObstacles.add(new GenericObstacle(990, (i*40)+2));
-		}
-		genericObstacles.add(new GenericObstacle(245, 145));
-		genericObstacles.add(new GenericObstacle(498, 438));
-		genericObstacles.add(new GenericObstacle(149, 514));
-		genericObstacles.add(new GenericObstacle(648, 189));
-		genericObstacles.add(new GenericObstacle(168, 465));
-
-		obstacles.add(new Save(600, 600));
-
 	}
 
 	private void initPanel() {
@@ -141,20 +111,14 @@ public class ViewPanel extends JPanel implements ActionListener {
 		centerConstraints.fill = GridBagConstraints.CENTER;
 		
 		gridbag.setConstraints(this, centerConstraints);
-		
-		//GridBagConstraints constraints = new GridBagConstraints();
-		//constraints.fill = GridBagConstraints.NORTHWEST;
-		//gridbag.setConstraints(this, constraints);
 
 		this.setLayout(gridbag);
 		
 		setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
 
 		if (player == null) {
-			player = new Player(500, 100, new MainPlayer("Matthew"), this);
+			player = new Player(500, 100, new MainPlayer("Matthew Gimbut"));
 		}
-
-		determineObstacles();
 
 		timer = new Timer(DELAY, this);
 		timer.start();
@@ -171,26 +135,13 @@ public class ViewPanel extends JPanel implements ActionListener {
 		Toolkit.getDefaultToolkit().sync();
 	}
 
-	private void determineObstacles() {
-		for (Lootable loot : lootables) {
-			if (loot.isObstacle() && loot.isVisible()) {
-				obstacles.add(loot);
-			}
-		}
-		for (GenericObstacle obst : genericObstacles) {
-			if (obst.isVisible()) {
-				obstacles.add(obst);
-			}
-		}
-	}
-
 	private void drawObjects(Graphics g) {
 
 		if (player.isVisible()) {
 			g.drawImage(player.getImage(), player.getX(), player.getY(), this);
 		}
 
-		for (Sprite sprite : obstacles) {
+		for (Sprite sprite : mapItems) {
 			if (sprite.isVisible()) {
 				g.drawImage(sprite.getImage(), sprite.getX(), sprite.getY(), this);
 			}
@@ -280,7 +231,6 @@ public class ViewPanel extends JPanel implements ActionListener {
 			menuCurrentlyDisplayed = true;
 			GridBagConstraints c = new GridBagConstraints();
 			c = new GridBagConstraints();
-			//c.fill = GridBagConstraints.HORIZONTAL;
 			c.anchor = GridBagConstraints.NORTHWEST;
 			c.weightx = 1;
 			c.weighty = 1;
@@ -292,8 +242,8 @@ public class ViewPanel extends JPanel implements ActionListener {
 		}
 	}
 
-	public void displayBattlePanel(ArrayList<Enemy> enemies) {
-		BattleGUI battlePanel = new BattleGUI(player.getMainPlayer(), enemies, this, null);
+	public void displayBattlePanel(ArrayList<Enemy> enemies, Sprite mapSprite) {
+		BattleGUI battlePanel = new BattleGUI(player.getMainPlayer(), enemies, this, mapSprite);
 		if (!battleCurrentlyDisplayed) {
 			battleCurrentlyDisplayed = true;
 			addPanel(battlePanel, null);
@@ -354,7 +304,6 @@ public class ViewPanel extends JPanel implements ActionListener {
 			messageCurrentlyDisplayed = true;
 			GridBagConstraints c = new GridBagConstraints();
 			c = new GridBagConstraints();
-			//c.fill = GridBagConstraints.HORIZONTAL;
 			c.weightx = 1;
 			c.weighty = 1;
 			addPanel(messagePanel, c);
@@ -394,7 +343,7 @@ public class ViewPanel extends JPanel implements ActionListener {
 	}
 
 	public ArrayList<Sprite> getObstacles() {
-		return obstacles;
+		return mapItems;
 	}
 
 	public GameController getController() {
@@ -408,7 +357,7 @@ public class ViewPanel extends JPanel implements ActionListener {
 	private void interact(int x, int y) {
 		Rectangle interactArea = new Rectangle(ViewPanel.PLAYER_X, ViewPanel.PLAYER_Y);
 		interactArea.setLocation(x, y);
-		for (Sprite obstacle : obstacles) {
+		for (Sprite obstacle : mapItems) {
 			if (interactArea.intersects(obstacle.getBounds())) {
 				if (obstacle instanceof Lootable) {
 					displayLootPanel(((Lootable) obstacle).getItems());
@@ -416,21 +365,32 @@ public class ViewPanel extends JPanel implements ActionListener {
 				} else if (obstacle instanceof Save) {
 					serialize();
 					displayMessagePanel("Save succeeded!");
+				} else if(obstacle instanceof NPC) {
+					if(((NPC) obstacle).getNPC() instanceof Enemy && ((NPC) obstacle).getNPC().getCurrentHP()>0) {
+						//TODO inefficient/pointless, find better way to do this
+						ArrayList<Enemy> enemy = new ArrayList<Enemy>();
+						enemy.add((Enemy) ((NPC) obstacle).getNPC());
+						displayBattlePanel(enemy, obstacle);
+					}
 				}
 			}
 		}
 	}
 
+	public ArrayList<Sprite> getMapItems() {
+		return mapItems;
+	}
+	
 	private void enemyEncounter() {
 		Random rand = new Random();
-		if (rand.nextInt(1000) < 25) {
-			displayBattlePanel(GameController.getRandomEnemies(3));
+		if (rand.nextInt(1000) < 15) {
+			displayBattlePanel(GameController.getRandomEnemies(3), null);
 		}
 
 	}
 
 	private boolean collision() {
-		for (Sprite obstacle : obstacles) {
+		for (Sprite obstacle : mapItems) {
 			if (player.getBounds().intersects(obstacle.getBounds()))
 				return true;
 		}
@@ -440,7 +400,7 @@ public class ViewPanel extends JPanel implements ActionListener {
 	public void serialize() {
 		ArrayList<Sprite> toSave = new ArrayList<Sprite>();
 		toSave.add(player);
-		toSave.addAll(obstacles);
+		toSave.addAll(mapItems);
 
 		try (FileOutputStream fs = new FileOutputStream(FILE_NAME, DO_NOT_APPEND);
 				ObjectOutputStream os = new ObjectOutputStream(fs)) {
@@ -468,34 +428,31 @@ public class ViewPanel extends JPanel implements ActionListener {
 		@Override
 		public void keyReleased(KeyEvent e) {
 			int key = e.getKeyCode();
-			if (key == KeyEvent.VK_T) {
+			switch (key) {
+			case KeyEvent.VK_T:
 				toggleMenu();
-			} else {
-				switch (key) {
-
-				case KeyEvent.VK_SHIFT:
-					player.setSpriteSpeed(2);
-					break;
-				case KeyEvent.VK_A:
-					player.setDX(0);
-					break;
-				case KeyEvent.VK_D:
-					player.setDX(0);
-					break;
-				case KeyEvent.VK_W:
-					player.setDY(0);
-					break;
-				case KeyEvent.VK_S:
-					player.setDY(0);
-					break;
-				}
+				break;
+			case KeyEvent.VK_SHIFT:
+				player.setSpriteSpeed(2);
+				break;
+			case KeyEvent.VK_A:
+				player.setDX(0);
+				break;
+			case KeyEvent.VK_D:
+				player.setDX(0);
+				break;
+			case KeyEvent.VK_W:
+				player.setDY(0);
+				break;
+			case KeyEvent.VK_S:
+				player.setDY(0);
+				break;
 			}
 		}
 
 		@Override
 		public void keyPressed(KeyEvent e) {
 			int key = e.getKeyCode();
-
 			if (!engaged()) {
 				switch (key) {
 				case KeyEvent.VK_E:

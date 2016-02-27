@@ -89,7 +89,7 @@ public class SettingsGUI extends JPanel {
 
 		
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-		this.setSize(400, 200);
+		this.setSize(ViewPanel.B_WIDTH, ViewPanel.B_HEIGHT);
 		this.repaint();
 		this.setVisible(true);
 	}

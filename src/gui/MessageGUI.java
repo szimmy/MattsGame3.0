@@ -49,7 +49,7 @@ public class MessageGUI extends JPanel {
 				
 		
 		this.message = new JLabel(message);
-		this.message.setFont(new Font("Gentium Book Basic", Font.PLAIN, 28));
+		this.message.setFont(new Font("Cambria", Font.PLAIN, 28));
 		this.message.setOpaque(false);
 		this.message.setBackground(GameController.BACKGROUND_COLOR_THEME);
 		
@@ -75,7 +75,7 @@ public class MessageGUI extends JPanel {
 	private class MessageListener implements KeyListener {
 		@Override
 		public void keyPressed(KeyEvent event) {
-			if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+			if (event.getKeyCode() == KeyEvent.VK_E) {
 				currentView.removeMessagePanel(getInstance());
 			}
 		}
@@ -83,7 +83,7 @@ public class MessageGUI extends JPanel {
 		public void keyReleased(KeyEvent event) {}
 		@Override
 		public void keyTyped(KeyEvent event) {
-			if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+			if (event.getKeyCode() == KeyEvent.VK_E) {
 				currentView.removeMessagePanel(getInstance());
 			}
 		}		

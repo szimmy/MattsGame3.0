@@ -23,6 +23,7 @@ public abstract class Character implements Serializable {
 	private double carryCap;
 	private double currentCarry;
 	private boolean isDead;
+	private String image;
 	
 	public Character(String name, int lvl, int currentHP, int maxHP, int atk, int def, int speed, int currentCarry, int carryCap) {
 		this.lvl = lvl;
@@ -35,6 +36,20 @@ public abstract class Character implements Serializable {
 		this.currentCarry = currentCarry;
 		this.carryCap = carryCap;
 		this.isDead = false;
+	}
+	
+	public Character(String name, int lvl, int currentHP, int maxHP, int atk, int def, int speed, int currentCarry, int carryCap, String image) {
+		this.lvl = lvl;
+		this.name = name;
+		this.currentHP = currentHP;
+		this.maxHP = maxHP;
+		this.atk = atk;
+		this.def = def;
+		this.speed = speed;
+		this.currentCarry = currentCarry;
+		this.carryCap = carryCap;
+		this.isDead = false;
+		this.image = image;
 	}
 	
 	/**
@@ -160,5 +175,13 @@ public abstract class Character implements Serializable {
 	
 	public boolean getIsDead() {
 		return this.isDead;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 }

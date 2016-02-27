@@ -21,6 +21,8 @@ import characters.MainPlayer;
 import main.BattleHandler;
 import main.GameController;
 import sprites.Player;
+import sprites.Sprite;
+import sprites.NPC;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -74,6 +76,7 @@ public class BattleGUI extends JPanel {
 	private MediaPlayer musicPlayer;
 	private MediaPlayer soundEffectPlayer;
 	private ViewPanel currentView;
+	private Sprite mapSprite;
 	private final int ENEMY_INTERVAL = 1000; //Maximum time interval between enemy attacks.
 											 //This is to prevent times from being activated too quickly in succession.
 	
@@ -84,7 +87,7 @@ public class BattleGUI extends JPanel {
 	 * @param currentGame The GameFrame object from where the battle spawned. 
 	 * @param battleMusic The music to be played during the battle. If null, default music plays. 
 	 */
-	public BattleGUI(MainPlayer player, ArrayList<Enemy> enemies, ViewPanel currentView, String battleMusic) {
+	public BattleGUI(MainPlayer player, ArrayList<Enemy> enemies, ViewPanel currentView, Sprite mapSprite) {
 		
 		this.currentView = currentView;
 		this.enemies = enemies;
@@ -95,19 +98,16 @@ public class BattleGUI extends JPanel {
 		this.enemySlowIndex = 0;
 		this.fastEnemies = new ArrayList<Enemy>();
 		this.slowEnemies = new ArrayList<Enemy>();
+		this.mapSprite = mapSprite;
 		rand = new Random();
 		
 		@SuppressWarnings("unused")
 		JFXPanel fxPanel = new JFXPanel(); //MUST create JFXPanel in order for JavaFX to work!!
 										   //Some bullshit about not initializing the toolkit otherwise
-		if(battleMusic == null) {
-			this.battleMusic = "Music\\StolenMusic" + rand.nextInt(2) + ".mp3";
-		}
-		else {
-			this.battleMusic = battleMusic;
-		}
 				
-		/**
+		assignBattleMusic();
+		
+		/*
 		 * The three main timers for enemy attacks are instantiated as the simplest timers possible.
 		 * This is to prevent NPEs when checking to see if they're running.
 		 * Doing it this way is a bit simpler than having to always worry about 
@@ -228,6 +228,24 @@ public class BattleGUI extends JPanel {
 		this.repaint();
 	}
 	
+	/*
+	 * Initializes music to generic battle music, before checking to see
+	 * if any of the enemies have custom tracks instead.
+	 * If they have a custom track, reassigns battleMusic to that track.
+	 */
+	private void assignBattleMusic() {
+		this.battleMusic = "Music\\StolenMusic" + rand.nextInt(2) + ".mp3";
+		boolean foundMusic = false;
+		int enemySize = enemies.size();
+		for(int i = 0; i < enemySize && !foundMusic; i++) {
+			String music = enemies.get(i).getCustomMusic();
+			if(!music.isEmpty()) {
+				this.battleMusic = music;
+				foundMusic = true;
+			}
+		}
+	}
+	
 	/**
 	 * Redraws both the player's and enemy's panels on the GUI.
 	 * Use sparingly as it is more resource intensive than is usually needed. 
@@ -243,6 +261,9 @@ public class BattleGUI extends JPanel {
 	 */
 	private void closeBattleFrame() {
 		musicPlayer.stop();
+		if(mapSprite != null) {
+			((Enemy) ((NPC) mapSprite).getNPC()).setSelected(false);
+		}
 		currentView.removeBattlePanel(this);
 	}
 	
@@ -253,6 +274,9 @@ public class BattleGUI extends JPanel {
 	 */
 	private void endBattle() {
 		leave.setEnabled(true);
+		if(mapSprite != null) {
+			currentView.getMapItems().remove(mapSprite);
+		}
 		musicPlayer.stop();
 	}
 
@@ -300,7 +324,7 @@ public class BattleGUI extends JPanel {
 			secondLevelFormatter.setOpaque(false);
 			enemyFormatter.setLayout(new GridLayout(3, 1));
 			enemyFormatter.add(name);
-			enemyFormatter.add(new JLabel(new ImageIcon("Images\\Enemies\\Enemy" + rand.nextInt(4) +".png")));
+			enemyFormatter.add(new JLabel(new ImageIcon(enemy.getImage())));
 			enemyFormatter.add(enemyHealth);
 			enemiesLeft++;
 			if(enemy.getSelected()) {
@@ -344,6 +368,7 @@ public class BattleGUI extends JPanel {
 		}
 		
 		this.repaint();
+		this.revalidate();
 	}
 	
 	/**
@@ -553,6 +578,12 @@ public class BattleGUI extends JPanel {
 					repaint();
 				}
 			} else {
+				selectedEnemy = null;
+				for(Enemy enemy : enemies) {
+					enemy.setSelected(false);
+				}
+				revalidate();
+				repaint();
 				closeBattleFrame();
 			}
 
@@ -631,6 +662,10 @@ public class BattleGUI extends JPanel {
 	 */
 	public Timer getEnemyAttackFastCounter() {
 		return enemyAttackFastCounter;
+	}
+	
+	public ViewPanel getCurrentView() {
+		return currentView;
 	}
 	
 	/**

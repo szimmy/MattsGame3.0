@@ -121,4 +121,8 @@ public abstract class Sprite implements Serializable {
     public boolean isObstacle() {
     	return isObstacle;
     }
+    
+    public void setObstacle(boolean isObstacle) {
+    	this.isObstacle = isObstacle;
+    }
 }
