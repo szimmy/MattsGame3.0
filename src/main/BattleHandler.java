@@ -1,5 +1,6 @@
 package main;
 
+import java.text.DecimalFormat;
 import java.util.Random;
 
 import gui.BattleGUI;
@@ -25,6 +26,7 @@ public class BattleHandler {
 	private Timer xp;
 	private int damageCounter;
 	private int xpCounter;
+	private DecimalFormat formatter;
 	
 	//Will only be true when the timers for changing the stat bars are running.
 	//This is to prevent timers from being reactivated while still running.
@@ -44,6 +46,8 @@ public class BattleHandler {
 		damageCounter = 0;
 		xpCounter = 0;
 		isProcessing = false;
+		formatter = new DecimalFormat();
+		formatter.setMaximumFractionDigits(0);
 	}
 	
 	/**
@@ -70,7 +74,7 @@ public class BattleHandler {
 			}
 			else {
 				checkForDeath(attacker, defender);
-				defender.modifyCurrentHP(-1); //Modifying the health by -1 each tick allows the HP bar to appear to drain
+				defender.modifyCurrentHP(-1); //Modifying the health by -1 each tick allows the HP bar to appear to drain				
 				adjustHealthBar(defender);
 				battle.repaint();
 				damageCounter++;
@@ -112,13 +116,13 @@ public class BattleHandler {
 		if(defender.getCurrentHP() == 0) {
 			damageCounter = 0;
 			defender.setDead(true);
-			alertBuilder(defender.getName() + " has been defeated.");
 			if(defender instanceof Enemy) {
 				handleEnemyDeath(attacker, defender);
 				battle.updateGUI();
 			}
 			else if(defender instanceof MainPlayer) {
 				handlePlayerDeath(attacker, defender);
+				alertBuilder(defender.getName() + " has been defeated. Game over!");
 				battle.updateGUI();
 			}
 			
@@ -158,8 +162,13 @@ public class BattleHandler {
 		battle.soundPlayer("Sounds\\Death\\Scream " + rand.nextInt(20) + ".mp3", GameController.voiceVolume);
 		battle.getEnemies().remove(defender);
 		battle.resetSelectedEnemy();
-		int xpGain = (defender.getLvl() + defender.getAtk() + defender.getDef() + defender.getSpeed())*3;
-		modifyXPValue((MainPlayer) attacker, xpGain);
+		
+		double xpGain = (((defender.getLvl()/attacker.getLvl()))
+				* (defender.getAtk() + defender.getDef() + defender.getSpeed()));
+		xpGain = Math.round(xpGain);
+		
+		modifyXPValue((MainPlayer) attacker, (int) xpGain);
+		alertBuilder(defender.getName() + " has been defeated. You have gained " + formatter.format(xpGain) + " xp.");
 		defender = null;
 	}
 	

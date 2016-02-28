@@ -26,6 +26,7 @@ public abstract class Sprite implements Serializable {
     protected String imageLocation;
     protected boolean isObstacle;
     private ImageIcon i;
+    protected String[] message;
     
     public Sprite(int x, int y) {
         this.x = x;
@@ -33,6 +34,7 @@ public abstract class Sprite implements Serializable {
         visible = true;
     }
 
+    
     public void getImageDimensions() {
         width = image.getWidth(null);
         height = image.getHeight(null);
@@ -125,4 +127,12 @@ public abstract class Sprite implements Serializable {
     public void setObstacle(boolean isObstacle) {
     	this.isObstacle = isObstacle;
     }
+
+	public String[] getMessage() {
+		return message;
+	}
+
+	public void setMessage(String[] message) {
+		this.message = message;
+	}
 }

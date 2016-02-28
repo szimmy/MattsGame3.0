@@ -7,6 +7,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,14 +18,18 @@ import java.util.Random;
 import javax.swing.*;
 import characters.Enemy;
 import characters.MainPlayer;
+import characters.Neutral;
 import items.Item;
 import main.GameController;
 import main.MapParser;
+import sprites.DisplayItem;
+import sprites.Exit;
 import sprites.Lootable;
 import sprites.NPC;
 import sprites.Player;
 import sprites.Save;
 import sprites.Sprite;
+import sprites.UnderLayer;
 
 public class ViewPanel extends JPanel implements ActionListener {
 
@@ -50,6 +55,9 @@ public class ViewPanel extends JPanel implements ActionListener {
 	private final static boolean DO_NOT_APPEND = false;
 	private GridBagLayout gridbag;
 	private GridBagConstraints centerConstraints;
+	private JPanel spacingOne;
+	private JPanel spacingTwo;
+	private boolean moved;
 
 	public ViewPanel(GameController control) {
 		initFlags();
@@ -79,6 +87,7 @@ public class ViewPanel extends JPanel implements ActionListener {
 	}
 
 	private void initFlags() {
+		moved = false;
 		menuCurrentlyDisplayed = false;
 		battleCurrentlyDisplayed = false;
 		statsCurrentlyDisplayed = false;
@@ -127,38 +136,29 @@ public class ViewPanel extends JPanel implements ActionListener {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if (ingame) {
-			drawObjects(g);
-		} else {
-			drawGameOver(g);
-		}
+		drawObjects(g);
 		Toolkit.getDefaultToolkit().sync();
 	}
 
 	private void drawObjects(Graphics g) {
 
+		for(Sprite sprite : mapItems) {
+			if(sprite instanceof UnderLayer && sprite.isVisible()) {
+				g.drawImage(sprite.getImage(), sprite.getX(), sprite.getY(), this);
+			}
+		}
+		
 		if (player.isVisible()) {
 			g.drawImage(player.getImage(), player.getX(), player.getY(), this);
 		}
 
 		for (Sprite sprite : mapItems) {
-			if (sprite.isVisible()) {
+			if (!(sprite instanceof UnderLayer) && sprite.isVisible()) {
 				g.drawImage(sprite.getImage(), sprite.getX(), sprite.getY(), this);
 			}
 		}
 
 		g.setColor(Color.WHITE);
-	}
-
-	private void drawGameOver(Graphics g) {
-
-		String msg = "Game Over";
-		Font small = new Font("Helvetica", Font.BOLD, 14);
-		FontMetrics fm = getFontMetrics(small);
-
-		g.setColor(Color.white);
-		g.setFont(small);
-		g.drawString(msg, (B_WIDTH - fm.stringWidth(msg)) / 2, B_HEIGHT / 2);
 	}
 
 	@Override
@@ -300,12 +300,36 @@ public class ViewPanel extends JPanel implements ActionListener {
 
 	public void displayMessagePanel(String message) {
 		MessageGUI messagePanel = new MessageGUI(message, player.getMainPlayer(), this);
+		messageInfo(messagePanel);
+	}
+	
+	public void displayMessagePanel(String[] message, NPC npc) {
+		MessageGUI messagePanel = new MessageGUI(message, player.getMainPlayer(), this, npc);
+		messageInfo(messagePanel);
+	}
+	
+	private void messageInfo(MessageGUI messagePanel) {
 		if (!messageCurrentlyDisplayed) {
 			messageCurrentlyDisplayed = true;
 			GridBagConstraints c = new GridBagConstraints();
 			c = new GridBagConstraints();
-			c.weightx = 1;
+			c.weightx = 0;
 			c.weighty = 1;
+			if(player.getY() > ViewPanel.B_HEIGHT/2) {
+				c.anchor = GridBagConstraints.NORTH;
+			} else {
+				//TODO Remove these upon removal of message panel??
+				spacingOne = new JPanel();
+				spacingOne.setOpaque(false);
+				c.gridx = 0;
+				c.gridy = 0;
+				this.add(spacingOne, c);
+				spacingTwo = new JPanel();
+				spacingTwo.setOpaque(false);
+				c.gridy = 1;
+				this.add(spacingTwo, c);
+				c.gridy = 2;
+			}
 			addPanel(messagePanel, c);
 			messagePanel.setLocation(0, 960);
 			messagePanel.setFocusable(true);
@@ -316,6 +340,11 @@ public class ViewPanel extends JPanel implements ActionListener {
 	public void removeMessagePanel(MessageGUI message) {
 		messageCurrentlyDisplayed = false;
 		removePanel(message);
+		try {
+			this.remove(spacingOne);
+			this.remove(spacingTwo);
+		} catch (NullPointerException e){}
+
 		this.setFocusable(true);
 		this.requestFocusInWindow();
 	}
@@ -355,7 +384,8 @@ public class ViewPanel extends JPanel implements ActionListener {
 	}
 
 	private void interact(int x, int y) {
-		Rectangle interactArea = new Rectangle(ViewPanel.PLAYER_X, ViewPanel.PLAYER_Y);
+		Rectangle interactArea = new Rectangle(ViewPanel.PLAYER_X/2, ViewPanel.PLAYER_Y/2);
+		DisplayItem remove = null;
 		interactArea.setLocation(x, y);
 		for (Sprite obstacle : mapItems) {
 			if (interactArea.intersects(obstacle.getBounds())) {
@@ -363,20 +393,42 @@ public class ViewPanel extends JPanel implements ActionListener {
 					displayLootPanel(((Lootable) obstacle).getItems());
 					repaint();
 				} else if (obstacle instanceof Save) {
-					serialize();
 					displayMessagePanel("Save succeeded!");
-				} else if(obstacle instanceof NPC) {
-					if(((NPC) obstacle).getNPC() instanceof Enemy && ((NPC) obstacle).getNPC().getCurrentHP()>0) {
-						//TODO inefficient/pointless, find better way to do this
-						ArrayList<Enemy> enemy = new ArrayList<Enemy>();
-						enemy.add((Enemy) ((NPC) obstacle).getNPC());
-						displayBattlePanel(enemy, obstacle);
-					}
+				} else if (obstacle instanceof NPC) {
+					npcInteraction(obstacle);
+				} else if (obstacle instanceof DisplayItem) {
+					itemInteraction((DisplayItem) obstacle);
+					remove = (DisplayItem) obstacle;
 				}
 			}
 		}
+		if (remove != null) {
+			mapItems.remove(remove);
+		}
 	}
 
+	private void itemInteraction(DisplayItem item) {
+		displayMessagePanel("You have picked up a(n) " + item.getItem().getSimpleName() + "!");
+		player.getMainPlayer().addItem(item.getItem());
+	}
+	
+	private void npcInteraction(Sprite obstacle) {
+		if(((NPC) obstacle).getNPC() instanceof Enemy) {
+			if(((NPC) obstacle).getMessage() != null) {
+				displayMessagePanel(((NPC) obstacle).getMessage(), (NPC) obstacle);
+			}
+			else {
+				//TODO inefficient/pointless, find better way to do this
+				ArrayList<Enemy> enemy = new ArrayList<Enemy>();
+				enemy.add((Enemy) ((NPC) obstacle).getNPC());
+				displayBattlePanel(enemy, obstacle);
+			}
+		} else if (((NPC) obstacle).getNPC() instanceof Neutral) {
+			displayMessagePanel(((NPC) obstacle).getMessage(), (NPC) obstacle);
+		}
+		
+	}
+	
 	public ArrayList<Sprite> getMapItems() {
 		return mapItems;
 	}
@@ -391,38 +443,31 @@ public class ViewPanel extends JPanel implements ActionListener {
 
 	private boolean collision() {
 		for (Sprite obstacle : mapItems) {
-			if (player.getBounds().intersects(obstacle.getBounds()))
-				return true;
+			if (obstacle.isObstacle() && player.getBounds().intersects(obstacle.getBounds())){
+				if(obstacle instanceof Exit) {
+					try {
+						mapItems = MapParser.parseMap(((Exit) obstacle).getNextMapX(), ((Exit) obstacle).getNextMapY());
+						player.setX(500);
+						player.setY(100);
+					} catch (FileNotFoundException e) {
+						System.out.println("File not found???");
+					} catch (IOException e) {
+						System.out.println("Something broke I/O");
+					}
+					
+				}
+				else {
+					return true;
+
+				}
+			}
 		}
 		return false;
 	}
 	
-	public void serialize() {
-		ArrayList<Sprite> toSave = new ArrayList<Sprite>();
-		toSave.add(player);
-		toSave.addAll(mapItems);
-
-		try (FileOutputStream fs = new FileOutputStream(FILE_NAME, DO_NOT_APPEND);
-				ObjectOutputStream os = new ObjectOutputStream(fs)) {
-			os.writeObject(toSave);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static ArrayList<Sprite> deserialize() {
-		try (FileInputStream fs = new FileInputStream(FILE_NAME); ObjectInputStream os = new ObjectInputStream(fs)) {
-			return (ArrayList<Sprite>) os.readObject();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		// If the deserialize fails return null
-		return null;
-	}
+	//private boolean collision() {
+	//	mapItems.parallelStream().filter(obstacle -> obstacle.isObstacle()).
+	//}
 
 	private class TAdapter extends KeyAdapter {
 		@Override
@@ -457,13 +502,13 @@ public class ViewPanel extends JPanel implements ActionListener {
 				switch (key) {
 				case KeyEvent.VK_E:
 					if (player.getImageLocation().equals(MainPlayer.FACING_NORTH)) {
-						interact(player.getX(), player.getY() - ViewPanel.PLAYER_Y);
+						interact(player.getX(), player.getY() - ViewPanel.PLAYER_Y + 20);
 					} else if (player.getImageLocation().equals(MainPlayer.FACING_SOUTH)) {
-						interact(player.getX(), player.getY() + ViewPanel.PLAYER_Y);
+						interact(player.getX(), player.getY() + ViewPanel.PLAYER_Y - 12);
 					} else if (player.getImageLocation().equals(MainPlayer.FACING_EAST)) {
-						interact(player.getX() + ViewPanel.PLAYER_X, player.getY());
+						interact(player.getX() + ViewPanel.PLAYER_X - 18, player.getY());
 					} else if (player.getImageLocation().equals(MainPlayer.FACING_WEST)) {
-						interact(player.getX() - ViewPanel.PLAYER_X, player.getY());
+						interact(player.getX() - ViewPanel.PLAYER_X + 18, player.getY());
 					}
 					break;
 

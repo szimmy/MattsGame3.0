@@ -30,7 +30,7 @@ public class MainPlayer extends Character {
 	private final static int STARTING_MAX_HP = 100;
 	private final static int STARTING_ATK = 50;
 	private final static int STARTING_DEF = 25;
-	private final static int STARTING_SPD = 25;
+	private final static int STARTING_SPD = 30;
 	private final static int STARTING_MAX_CARRY = 150;
 	public final static int MAX_XP = 100;
 	private LinkedList<Item> inventory;
@@ -50,7 +50,7 @@ public class MainPlayer extends Character {
 	 */
 	public MainPlayer(String username) {
 		super(username , STARTING_LEVEL, STARTING_CURRENT_HP, STARTING_MAX_HP, STARTING_ATK, STARTING_DEF, STARTING_SPD, 0, STARTING_MAX_CARRY);
-		this.xp = 95;
+		this.xp = 0;
 		this.gold = 0;
 		this.inventory = new LinkedList<Item>();
 	}

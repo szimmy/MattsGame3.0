@@ -1,8 +1,6 @@
 package characters;
 
 public class Neutral extends Character {
-
-	private String[] dialogue;
 	
 	public Neutral(String name, int lvl, int currentHP, int maxHP, int atk, int def, int speed, int currentCarry, int carryCap) {
 		super(name, lvl, currentHP, maxHP, atk, def, speed, currentCarry, carryCap);

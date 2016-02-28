@@ -179,7 +179,6 @@ public class InventoryGUI extends JPanel {
 				drop.setBackground(GameController.BUTTON_COLOR_THEME);
 				drop.addActionListener(event -> {
 					player.removeSingleItem(i);
-					equip.setEnabled(false);
 					drop.setEnabled(false);
 					info.setText("Dropped " + i.getSimpleName() + ".");
 					redrawInventory();
