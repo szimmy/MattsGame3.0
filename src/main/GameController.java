@@ -12,11 +12,14 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
+
+import com.sun.prism.Image;
 
 import characters.Enemy;
 import gui.ImagePanel;
@@ -28,12 +31,15 @@ import javafx.scene.media.MediaPlayer;
 public class GameController extends JFrame {
 
 	public static final Color BUTTON_COLOR_THEME = Color.LIGHT_GRAY;
+	public static final Color BUTTON_TEXT_COLOR = Color.BLACK;
 	public static final Color BACKGROUND_COLOR_THEME = Color.GRAY;
 	public static final int TIMER_CONTROLLER = 40;
 	public static double voiceVolume = .8;
 	public static double effectVolume = .5;
 	public static double musicVolume = .2;
 	public static final Font GAME_FONT = new Font("Cambria", Font.PLAIN, 14);
+	public static final Font GAME_FONT_SMALL = new Font("Cambria", Font.PLAIN, 12);
+
 	
 	private static Media sound;
 	private static MediaPlayer soundPlayer;
@@ -74,6 +80,8 @@ public class GameController extends JFrame {
 			e.printStackTrace();
 		}
     	
+		this.setIconImage(new ImageIcon("Images\\Player\\PlayerSouth.png").getImage());
+		
         this.add(new ViewPanel(this));
         
         setResizable(false);
@@ -93,7 +101,7 @@ public class GameController extends JFrame {
 				enemies.add(new Enemy(MALE_FIRST_NAMES[r.nextInt(45)] + " " + LAST_NAMES[r.nextInt(45)]));
 			}
 			else {
-				enemies.add(new Enemy(MALE_FIRST_NAMES[r.nextInt(45)] + " " + LAST_NAMES[r.nextInt(45)]));
+				enemies.add(new Enemy(FEMALE_FIRST_NAMES[r.nextInt(39)] + " " + LAST_NAMES[r.nextInt(45)]));
 			}
 		}
 		return enemies;
@@ -108,7 +116,7 @@ public class GameController extends JFrame {
 		JFXPanel panel = new JFXPanel();
 		sound = new Media(Paths.get(fileLocation).toUri().toString());
 		soundPlayer = new MediaPlayer(sound);
-		soundPlayer.play();
 		soundPlayer.setVolume(effectVolume);		
+		soundPlayer.play();
 	}
 }

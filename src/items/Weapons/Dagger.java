@@ -13,7 +13,7 @@ public class Dagger extends Weapon {
 	public Dagger(int atk, int def, int speedModifier, double weight, int hpBoost, int value, Rarity howRare, WeaponType weaponType) {
 		super(atk, def, speedModifier, weight, hpBoost, value, howRare, weaponType);
 		System.out.println(this.getWeaponType());
-		this.setImageLocation("Images\\Weapons\\" + this.getWeaponType().toString() + "\\dagger\\Dagger.png");
+		this.setImageLocation("Images\\Weapons\\" + this.getWeaponType().toString() + "\\Dagger.png");
 	}
 	
 	public Dagger() {

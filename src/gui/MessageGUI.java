@@ -6,11 +6,8 @@ import characters.Enemy;
 import characters.MainPlayer;
 import main.GameController;
 import sprites.NPC;
-import sprites.Player;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -20,16 +17,15 @@ import java.util.ArrayList;
  * @author Matthew Gimbut
  *
  */
+@SuppressWarnings("serial")
 public class MessageGUI extends JPanel {
  
-	private static final long serialVersionUID = -8661521249193047627L;
 	private JLabel message;
 	private JPanel centerPanel;
 	private JPanel southPanel;
 	private JPanel northPanel;
 	private JPanel spacing;
 	private ViewPanel currentView;
-	private JButton exit;
 	private boolean multipleMessages;
 	int messageCounter = 0;
 	private String[] messages;
@@ -61,6 +57,7 @@ public class MessageGUI extends JPanel {
 		this.multipleMessages = true;
 		this.messages = message;
 		this.npc = npc;
+		JLabel convBubble = new JLabel(new ImageIcon("Images\\Misc\\conversation.png"));
 		
 		initPanels();
 	
@@ -70,6 +67,7 @@ public class MessageGUI extends JPanel {
 			northPanel.setBackground(GameController.BACKGROUND_COLOR_THEME);
 			JLabel nameLabel = new JLabel(npc.getNPC().getName());
 			nameLabel.setFont(GameController.GAME_FONT);
+			northPanel.add(convBubble);
 			northPanel.add(nameLabel);
 			this.northPanel.add(northPanel);
 		}	

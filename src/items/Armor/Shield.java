@@ -12,7 +12,7 @@ public class Shield extends Armor {
 
 	public Shield() {
 		super(2, 6, 2, 4, 0, 100, Item.randomRareness(), Armor.getRandomArmorType());
-		this.setImageLocation("Images\\Armors\\" + this.getArmorType().toString() +  "\\Down\\Shield.png");
+		this.setImageLocation("Images\\Armors\\" + this.getArmorType().toString() +  "\\Shield.png");
 	}
 
 	@Override

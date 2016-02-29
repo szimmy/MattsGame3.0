@@ -275,7 +275,7 @@ public class BattleGUI extends JPanel {
 	private void endBattle() {
 		leave.setEnabled(true);
 		if(mapSprite != null) {
-			currentView.getMapItems().remove(mapSprite);
+			currentView.getObstacles().remove(mapSprite);
 		}
 		musicPlayer.stop();
 	}

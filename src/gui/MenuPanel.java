@@ -1,11 +1,16 @@
 package gui;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import main.GameController;
+import main.SaveManager;
 import sprites.Player;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class MenuPanel extends JPanel {
 
@@ -26,7 +31,11 @@ public class MenuPanel extends JPanel {
 		
 		inventory = new JButton("Inventory");
 		inventory.setFont(GameController.GAME_FONT);
-		inventory.setBackground(GameController.BUTTON_COLOR_THEME);
+		inventory.setForeground(GameController.BUTTON_TEXT_COLOR);
+		inventory.setOpaque(false);
+		inventory.setContentAreaFilled(false);
+		inventory.setBorderPainted(false);	
+		//inventory.setBackground(GameController.BUTTON_COLOR_THEME);
 		inventory.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		inventory.addActionListener(event -> {
 				currentView.displayInventoryPanel(currentView.getPlayer().getMainPlayer().getInventory());
@@ -34,7 +43,11 @@ public class MenuPanel extends JPanel {
 		});
 		
 		exit = new JButton("Exit");
-		exit.setBackground(GameController.BUTTON_COLOR_THEME);
+		exit.setForeground(GameController.BUTTON_TEXT_COLOR);
+		exit.setOpaque(false);
+		exit.setContentAreaFilled(false);
+		exit.setBorderPainted(false);
+		//exit.setBackground(GameController.BUTTON_COLOR_THEME);
 		exit.setFont(GameController.GAME_FONT);
 		exit.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		exit.addActionListener(event -> {
@@ -42,7 +55,11 @@ public class MenuPanel extends JPanel {
 		});
 		
 		stats = new JButton("Stats");
-		stats.setBackground(GameController.BUTTON_COLOR_THEME);
+		stats.setForeground(GameController.BUTTON_TEXT_COLOR);
+		stats.setOpaque(false);
+		stats.setContentAreaFilled(false);
+		stats.setBorderPainted(false);
+		//stats.setBackground(GameController.BUTTON_COLOR_THEME);
 		stats.setFont(GameController.GAME_FONT);
 		stats.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		stats.addActionListener(event -> {
@@ -51,7 +68,11 @@ public class MenuPanel extends JPanel {
 		});
 		
 		options = new JButton("Options");
-		options.setBackground(GameController.BUTTON_COLOR_THEME);
+		options.setForeground(GameController.BUTTON_TEXT_COLOR);
+		options.setOpaque(false);
+		options.setContentAreaFilled(false);
+		options.setBorderPainted(false);
+		//options.setBackground(GameController.BUTTON_COLOR_THEME);
 		options.setFont(GameController.GAME_FONT);
 		options.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		options.addActionListener(event ->  {
@@ -60,24 +81,24 @@ public class MenuPanel extends JPanel {
 		});
 		
 		load = new JButton("Load");
-		load.setBackground(GameController.BUTTON_COLOR_THEME);
+		load.setForeground(GameController.BUTTON_TEXT_COLOR);
+		load.setOpaque(false);
+		load.setContentAreaFilled(false);
+		load.setBorderPainted(false);
+		//load.setBackground(GameController.BUTTON_COLOR_THEME);
 		load.setFont(GameController.GAME_FONT);
 		load.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		load.addActionListener(event -> {
 			currentView.toggleMenu();
-			/*GameController control = currentView.getController();
-			control.getContentPane().removeAll();
-			control.getContentPane().revalidate();
-			ViewPanel newView = new ViewPanel(control, ViewPanel.deserialize());
-			newView.getPlayer().setMainView(newView);
-			newView.getPlayer().refreshImage();
-			control.getContentPane().add(newView);
-			control.getContentPane().revalidate();*/
-			
+			currentView.setMapItems(SaveManager.deserialize());			
 		});
 		
 		quit = new JButton("Quit");
-		quit.setBackground(GameController.BUTTON_COLOR_THEME);
+		// quit.setBackground(GameController.BUTTON_COLOR_THEME);
+		quit.setForeground(GameController.BUTTON_TEXT_COLOR);
+		quit.setOpaque(false);
+		quit.setContentAreaFilled(false);
+		quit.setBorderPainted(false);
 		quit.setFont(GameController.GAME_FONT);
 		quit.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		quit.addActionListener(event -> {
@@ -102,13 +123,26 @@ public class MenuPanel extends JPanel {
 		innerPanel.add(quit);
 		innerPanel.add(Box.createVerticalStrut(MenuPanel.BUTTON_DISTANCE));
 		
-		this.setBackground(GameController.BACKGROUND_COLOR_THEME);		
+		
+		
+		this.setBackground(GameController.BACKGROUND_COLOR_THEME);	
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		this.add(innerPanel);
 		this.setSize(100, 320);
-		this.setOpaque(true);
 		this.setVisible(true);
 		this.repaint();
 	}
 	
+	
+	/*@Override
+	  protected void paintComponent(Graphics g) {
+	    super.paintComponent(g);
+	    BufferedImage myImage = null;
+	    	try {
+				myImage = ImageIO.read(new File("Images\\MenuSmall.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	        g.drawImage(myImage, 0, 0, null);
+	}*/
 }

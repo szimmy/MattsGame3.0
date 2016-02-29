@@ -40,7 +40,7 @@ public interface MapParser {
 	 */
 	public static ArrayList<Sprite> parseMap(int x, int y) throws FileNotFoundException, IOException {
 		ArrayList<Sprite> objects = new ArrayList<Sprite>();
-		String fileLocation = "Maps\\Map" + x + "-" + y + ".map";
+		String fileLocation = "Saves\\Save01\\Maps\\Map" + x + "-" + y + ".map";
 		try(BufferedReader br = new BufferedReader(new FileReader(fileLocation))) {
 			String line = br.readLine();
 			while (line != null) {
@@ -118,6 +118,14 @@ public interface MapParser {
 			}
 		}
 		return objects;
+	}
+	
+	public static void removeItem(String key, int x, int y) {
+		
+	}
+	
+	public static void addItem(String key, int x, int y) {
+		
 	}
 	
 }

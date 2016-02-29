@@ -1,23 +1,22 @@
 package items.Weapons;
 
 import java.util.Random;
-
 import items.Item;
 import items.Rarity;
-import items.Armor.ArmorType;
 
 /**
  * Abstract Weapon superclass for all other weapon types
  * @author Matthew Gimbut
  *
  */
+@SuppressWarnings("serial")
 public abstract class Weapon extends Item {
 
 	private WeaponType weaponType;
 	
 	public Weapon(int atk, int def, int speedModifier, double weight, int hpBoost, int value, Rarity howRare, WeaponType weaponType) {
-		super((int) Math.round(atk*weaponTypeMultiplier(weaponType)), (int) Math.round(def*weaponTypeMultiplier(weaponType)), speedModifier,
-				(int) (weight * weaponTypeMultiplier(weaponType)), hpBoost,
+		super((int) Math.round(atk*weaponTypeMultiplier(weaponType)), (int) Math.round(def*weaponTypeMultiplier(weaponType)),
+				speedModifier, (int) (weight * weaponTypeMultiplier(weaponType)), hpBoost,
 				(int) Math.round(value*weaponTypeMultiplier(weaponType)), howRare);
 		this.weaponType = weaponType;
 	}

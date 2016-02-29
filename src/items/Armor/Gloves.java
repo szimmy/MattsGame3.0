@@ -12,9 +12,9 @@ public class Gloves extends Armor {
 
 	public Gloves() {
 		super(0, 2, 1, 2, 0, 50, Item.randomRareness(), Armor.getRandomArmorType());
-		this.setImageLocation("Images\\Armors\\" + this.getArmorType().toString() + "\\Down\\Gloves.png");
+		this.setImageLocation("Images\\Armors\\" + this.getArmorType().toString() + "\\Gloves.png");
 	}
-
+	
 	@Override
 	public String getItemToolTipText() {
 		if(this.getArmorType().equals(ArmorType.steel) 

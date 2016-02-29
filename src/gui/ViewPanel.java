@@ -15,6 +15,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.stream.Collectors;
+
 import javax.swing.*;
 import characters.Enemy;
 import characters.MainPlayer;
@@ -22,6 +24,7 @@ import characters.Neutral;
 import items.Item;
 import main.GameController;
 import main.MapParser;
+import main.SaveManager;
 import sprites.DisplayItem;
 import sprites.Exit;
 import sprites.Lootable;
@@ -51,13 +54,10 @@ public class ViewPanel extends JPanel implements ActionListener {
 	private boolean settingsCurrentlyDisplayed;
 	private boolean messageCurrentlyDisplayed;
 	private MenuPanel menu;
-	private final static String FILE_NAME = "Saves\\save01.ser";
-	private final static boolean DO_NOT_APPEND = false;
 	private GridBagLayout gridbag;
 	private GridBagConstraints centerConstraints;
 	private JPanel spacingOne;
 	private JPanel spacingTwo;
-	private boolean moved;
 
 	public ViewPanel(GameController control) {
 		initFlags();
@@ -87,7 +87,6 @@ public class ViewPanel extends JPanel implements ActionListener {
 	}
 
 	private void initFlags() {
-		moved = false;
 		menuCurrentlyDisplayed = false;
 		battleCurrentlyDisplayed = false;
 		statsCurrentlyDisplayed = false;
@@ -141,23 +140,23 @@ public class ViewPanel extends JPanel implements ActionListener {
 	}
 
 	private void drawObjects(Graphics g) {
-
-		for(Sprite sprite : mapItems) {
-			if(sprite instanceof UnderLayer && sprite.isVisible()) {
+		for(Sprite sprite : mapItems.parallelStream()
+				.filter(sprite -> sprite instanceof UnderLayer)
+				.filter(sprite -> sprite.isVisible())
+				.collect(Collectors.toList())) {
 				g.drawImage(sprite.getImage(), sprite.getX(), sprite.getY(), this);
-			}
 		}
 		
 		if (player.isVisible()) {
 			g.drawImage(player.getImage(), player.getX(), player.getY(), this);
 		}
-
-		for (Sprite sprite : mapItems) {
-			if (!(sprite instanceof UnderLayer) && sprite.isVisible()) {
+		
+		for(Sprite sprite : mapItems.parallelStream()
+				.filter(sprite -> !(sprite instanceof UnderLayer))
+				.filter(sprite -> sprite.isVisible())
+				.collect(Collectors.toList())) {
 				g.drawImage(sprite.getImage(), sprite.getX(), sprite.getY(), this);
-			}
 		}
-
 		g.setColor(Color.WHITE);
 	}
 
@@ -384,7 +383,7 @@ public class ViewPanel extends JPanel implements ActionListener {
 	}
 
 	private void interact(int x, int y) {
-		Rectangle interactArea = new Rectangle(ViewPanel.PLAYER_X/2, ViewPanel.PLAYER_Y/2);
+		Rectangle interactArea = new Rectangle(ViewPanel.PLAYER_X, ViewPanel.PLAYER_Y);
 		DisplayItem remove = null;
 		interactArea.setLocation(x, y);
 		for (Sprite obstacle : mapItems) {
@@ -393,6 +392,7 @@ public class ViewPanel extends JPanel implements ActionListener {
 					displayLootPanel(((Lootable) obstacle).getItems());
 					repaint();
 				} else if (obstacle instanceof Save) {
+					SaveManager.serialize(mapItems);
 					displayMessagePanel("Save succeeded!");
 				} else if (obstacle instanceof NPC) {
 					npcInteraction(obstacle);
@@ -408,7 +408,7 @@ public class ViewPanel extends JPanel implements ActionListener {
 	}
 
 	private void itemInteraction(DisplayItem item) {
-		displayMessagePanel("You have picked up a(n) " + item.getItem().getSimpleName() + "!");
+		displayMessagePanel("You have picked up a " + item.getItem().getSimpleName() + "!");
 		player.getMainPlayer().addItem(item.getItem());
 	}
 	
@@ -429,8 +429,9 @@ public class ViewPanel extends JPanel implements ActionListener {
 		
 	}
 	
-	public ArrayList<Sprite> getMapItems() {
-		return mapItems;
+	public void setMapItems(ArrayList<Sprite> mapItems) {
+		this.mapItems = mapItems;
+		repaint();
 	}
 	
 	private void enemyEncounter() {

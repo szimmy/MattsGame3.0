@@ -13,7 +13,7 @@ public class Sword extends Weapon{
 	public Sword(int atk, int def, int speedModifier, double weight, int hpBoost, int value, Rarity howRare,
 			WeaponType weaponType) {
 		super(atk, def, speedModifier, weight, hpBoost, value, howRare, weaponType);
-		this.setImageLocation("Images\\Weapons\\" + this.getWeaponType().toString() + "\\sword\\Sword.png");
+		this.setImageLocation("Images\\Weapons\\" + this.getWeaponType().toString() + "\\Sword.png");
 	}
 	
 	public Sword() {

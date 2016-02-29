@@ -12,7 +12,7 @@ public class Legs extends Armor {
 
 	public Legs() {
 		super(0, 5, 2, 5, 0, 75, Item.randomRareness(), Armor.getRandomArmorType());
-		this.setImageLocation("Images\\Armors\\" + this.getArmorType().toString() + "\\Down\\Legs.png");
+		this.setImageLocation("Images\\Armors\\" + this.getArmorType().toString() + "\\Legs.png");
 	}
 
 	@Override
