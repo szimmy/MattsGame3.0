@@ -67,7 +67,8 @@ public class InventoryGUI extends JPanel {
 		northPanel.add(title);
 		centerPanel = new JPanel();
 		centerPanel.setOpaque(false);
-		centerPanel.setLayout(new GridLayout(0, 4, 25, 15));
+		//centerPanel.setLayout(new GridLayout(0, 6, 25, 15));
+		centerPanel.setLayout(new FlowLayout());
 		southPanel = new JPanel();
 		southPanel.setLayout(new BorderLayout());
 		southPanel.setOpaque(false);
@@ -145,7 +146,7 @@ public class InventoryGUI extends JPanel {
 					 * Block for all weapons and armor AKA equippables
 					 */
 					equip = new JButton("Equip");
-					equip.setFont(GameController.GAME_FONT);
+					equip.setFont(GameController.GAME_FONT_SMALL);
 					equip.setBackground(GameController.BUTTON_COLOR_THEME);
 					equip.addActionListener(event -> {
 						if (i instanceof Weapon) {
@@ -161,7 +162,7 @@ public class InventoryGUI extends JPanel {
 
 				} else if (i instanceof Consumable) {
 					consume = new JButton("Consume");
-					consume.setFont(GameController.GAME_FONT);
+					consume.setFont(GameController.GAME_FONT_SMALL);
 					consume.setBackground(GameController.BUTTON_COLOR_THEME);
 					consume.addActionListener(event -> {
 						if (i instanceof Potion) {
@@ -175,7 +176,7 @@ public class InventoryGUI extends JPanel {
 				}
 
 				drop = new JButton("Drop");
-				drop.setFont(GameController.GAME_FONT);
+				drop.setFont(GameController.GAME_FONT_SMALL);
 				drop.setBackground(GameController.BUTTON_COLOR_THEME);
 				drop.addActionListener(event -> {
 					player.removeSingleItem(i);

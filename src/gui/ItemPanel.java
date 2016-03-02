@@ -82,15 +82,15 @@ public class ItemPanel extends JPanel {
 		
 		itemImage = new ImageIcon(p.getImageLocation());
 		
-		JLabel healthStat = new JLabel("Health: +" + p.getAmount());
+		JLabel healthStat = new JLabel("Hp: " + p.getAmount());
 		healthStat.setFont(GameController.GAME_FONT_SMALL);
-		amount = new JLabel("Amount: 1");
+		amount = new JLabel("Amt: 1");
 		amount.setFont(GameController.GAME_FONT_SMALL);
-		weight = new JLabel("Weight: " + numFormat.format(p.getWeight()));
+		weight = new JLabel("Wgt: " + numFormat.format(p.getWeight()));
 		weight.setFont(GameController.GAME_FONT_SMALL);
 		value = new JLabel("Gold: " + p.getValue());
 		value.setFont(GameController.GAME_FONT_SMALL);
-		imageLabel = new JLabel(itemImage);
+		imageLabel = new JLabel(itemImage, SwingConstants.CENTER);
 		imageLabel.setToolTipText(p.getItemToolTipText());
 		
 		centerEastPanel.add(healthStat);
@@ -111,15 +111,15 @@ public class ItemPanel extends JPanel {
 		setRarityColor(i);
 		
 		itemImage = new ImageIcon(i.getImageLocation());
-		atkStat = new JLabel("Attack: " + i.getAtk());
+		atkStat = new JLabel("Atk: " + i.getAtk());
 		atkStat.setFont(GameController.GAME_FONT_SMALL);
-		defStat = new JLabel("Defense: " + i.getDef());
+		defStat = new JLabel("Def: " + i.getDef());
 		defStat.setFont(GameController.GAME_FONT_SMALL);
-		weight = new JLabel("Weight: " + numFormat.format(i.getWeight()));
+		weight = new JLabel("Wgt: " + numFormat.format(i.getWeight()));
 		weight.setFont(GameController.GAME_FONT_SMALL);
 		value = new JLabel("Gold: " + i.getValue());
 		value.setFont(GameController.GAME_FONT_SMALL);
-		imageLabel = new JLabel(itemImage);
+		imageLabel = new JLabel(itemImage, SwingConstants.CENTER);
 		imageLabel.setToolTipText(i.getItemToolTipText());
 
 		centerEastPanel.add(atkStat);
@@ -169,7 +169,7 @@ public class ItemPanel extends JPanel {
 		northPanel.setOpaque(false);
 		centerPanel = new JPanel();		
 		centerEastPanel = new JPanel();
-		centerEastPanel.setLayout(new GridLayout(0, 1));
+		centerEastPanel.setLayout(new GridLayout(2, 2));
 		numFormat = new DecimalFormat("#.#");
 	}
 	
@@ -179,29 +179,35 @@ public class ItemPanel extends JPanel {
 	 * since it's used in both constructors. 
 	 */
 	private void secondSetUp() {
-		centerPanel.setLayout(new BorderLayout());
+		centerPanel.setLayout(new GridBagLayout());
 		centerPanel.setOpaque(false);
 		eastPanel = new JPanel();
 		centerEastPanel.setOpaque(false);
 		centerWestPanel = new JPanel();
+		centerWestPanel.setLayout(new GridBagLayout());
 		centerWestPanel.setOpaque(false);
-		
-		centerPanel.add(centerEastPanel, BorderLayout.EAST);
-		centerWestPanel.add(imageLabel);
-		centerPanel.add(centerWestPanel, BorderLayout.WEST);
-		westPanel.setOpaque(false);
 		
 		southPanel = new JPanel();
 		southPanel.setLayout(new FlowLayout());
 		
+		centerWestPanel.add(imageLabel);
+		centerPanel.add(centerWestPanel);
+		southPanel.add(centerEastPanel);
+		westPanel.setOpaque(false);
+		
+		
 		eastPanel.setOpaque(false);
 		centerPanel.setOpaque(false);
 		southPanel.setOpaque(false);
+		
+		JPanel inner = new JPanel();
+		inner.add(centerEastPanel);
+		
 		this.add(northPanel, BorderLayout.NORTH);
 		this.add(westPanel, BorderLayout.WEST);
 		this.add(eastPanel, BorderLayout.EAST);
 		this.add(centerPanel, BorderLayout.CENTER);
-		this.add(southPanel, BorderLayout.SOUTH);
+		this.add(inner, BorderLayout.SOUTH);
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 	}
 

@@ -34,7 +34,7 @@ import sprites.Save;
 import sprites.Sprite;
 import sprites.UnderLayer;
 
-public class ViewPanel extends JPanel implements ActionListener {
+public class ViewPanel extends JPanel {
 
 	private Timer timer;
 	private Player player;
@@ -45,6 +45,8 @@ public class ViewPanel extends JPanel implements ActionListener {
 	public static final int B_HEIGHT = 730;
 	private final int DELAY = 15;
 	private ArrayList<Sprite> mapItems;
+	private ArrayList<Sprite> underLayer;
+	private ArrayList<Sprite> overLayer;
 	private GameController control;
 	private boolean menuCurrentlyDisplayed;
 	private boolean battleCurrentlyDisplayed;
@@ -80,6 +82,8 @@ public class ViewPanel extends JPanel implements ActionListener {
 		sprites.remove(0);
 
 		mapItems = new ArrayList<Sprite>();
+		underLayer = new ArrayList<Sprite>();
+		overLayer = new ArrayList<Sprite>();
 
 		initFlags();
 		initPanel();
@@ -99,12 +103,25 @@ public class ViewPanel extends JPanel implements ActionListener {
 	private void initCollections() {
 		try {
 			mapItems = MapParser.parseMap(0, 0);
+			updateLayers();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	private void updateLayers() {
+		underLayer = (ArrayList<Sprite>) mapItems.stream()
+				.filter(sprite -> sprite instanceof UnderLayer)
+				.filter(sprite -> sprite.isVisible())
+				.collect(Collectors.toList());
+		
+		overLayer = (ArrayList<Sprite>) mapItems.stream()
+				.filter(sprite -> !(sprite instanceof UnderLayer))
+				.filter(sprite -> sprite.isVisible())
+				.collect(Collectors.toList());
+	}
+	
 	private void initPanel() {
 		setOpaque(false);
 		addKeyListener((KeyListener) new TAdapter());
@@ -128,7 +145,16 @@ public class ViewPanel extends JPanel implements ActionListener {
 			player = new Player(500, 100, new MainPlayer("Matthew Gimbut"));
 		}
 
-		timer = new Timer(DELAY, this);
+		timer = new Timer(DELAY, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				inGame();
+				updatePlayer();
+				updateNPC();
+				repaint();
+			}
+		});
+		
 		timer.start();
 	}
 
@@ -140,10 +166,7 @@ public class ViewPanel extends JPanel implements ActionListener {
 	}
 
 	private void drawObjects(Graphics g) {
-		for(Sprite sprite : mapItems.parallelStream()
-				.filter(sprite -> sprite instanceof UnderLayer)
-				.filter(sprite -> sprite.isVisible())
-				.collect(Collectors.toList())) {
+		for(Sprite sprite : underLayer) {
 				g.drawImage(sprite.getImage(), sprite.getX(), sprite.getY(), this);
 		}
 		
@@ -151,23 +174,12 @@ public class ViewPanel extends JPanel implements ActionListener {
 			g.drawImage(player.getImage(), player.getX(), player.getY(), this);
 		}
 		
-		for(Sprite sprite : mapItems.parallelStream()
-				.filter(sprite -> !(sprite instanceof UnderLayer))
-				.filter(sprite -> sprite.isVisible())
-				.collect(Collectors.toList())) {
+		for(Sprite sprite : overLayer) {
 				g.drawImage(sprite.getImage(), sprite.getX(), sprite.getY(), this);
 		}
 		g.setColor(Color.WHITE);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		inGame();
-		updatePlayer();
-		updateNPC();
-		repaint();
-	}
-	
 	private void inGame() {
 		if (!ingame) {
 			timer.stop();
@@ -404,6 +416,7 @@ public class ViewPanel extends JPanel implements ActionListener {
 		}
 		if (remove != null) {
 			mapItems.remove(remove);
+			updateLayers();
 		}
 	}
 
@@ -442,24 +455,27 @@ public class ViewPanel extends JPanel implements ActionListener {
 
 	}
 
+	private void updateMapItems(int nextMapX, int nextMapY) {
+		try {
+			mapItems = MapParser.parseMap(nextMapX, nextMapY);
+			updateLayers();
+			player.setX(500);
+			player.setY(100);
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found???");
+		} catch (IOException e) {
+			System.out.println("Something broke I/O");
+		}
+	}
+	
 	private boolean collision() {
 		for (Sprite obstacle : mapItems) {
 			if (obstacle.isObstacle() && player.getBounds().intersects(obstacle.getBounds())){
 				if(obstacle instanceof Exit) {
-					try {
-						mapItems = MapParser.parseMap(((Exit) obstacle).getNextMapX(), ((Exit) obstacle).getNextMapY());
-						player.setX(500);
-						player.setY(100);
-					} catch (FileNotFoundException e) {
-						System.out.println("File not found???");
-					} catch (IOException e) {
-						System.out.println("Something broke I/O");
-					}
-					
+					updateMapItems(((Exit) obstacle).getNextMapX(), ((Exit) obstacle).getNextMapY());	
 				}
 				else {
 					return true;
-
 				}
 			}
 		}

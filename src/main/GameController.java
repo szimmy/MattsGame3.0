@@ -39,10 +39,9 @@ public class GameController extends JFrame {
 	public static double musicVolume = .2;
 	public static final Font GAME_FONT = new Font("Cambria", Font.PLAIN, 14);
 	public static final Font GAME_FONT_SMALL = new Font("Cambria", Font.PLAIN, 12);
-
-	
 	private static Media sound;
 	private static MediaPlayer soundPlayer;
+	private static Random rand = new Random();
 	
 	
 	public static final String[] FEMALE_FIRST_NAMES = { "Mary", "Elizabeth", "Jennifer", "Maria", "Nancy", "Michelle", "Sarah", "Kim",
@@ -96,7 +95,7 @@ public class GameController extends JFrame {
 	public static ArrayList<Enemy> getRandomEnemies(int maxNumEnemies) {
 		ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 		Random r = new Random();
-		for(int i = 0; i < r.nextInt(maxNumEnemies)+1; i++) {
+		for(int i = 0; i < r.nextInt(maxNumEnemies)+1; i++) { //+1 to guarantee at least 1 enemy
 			if(r.nextInt(2) == 1) {
 				enemies.add(new Enemy(MALE_FIRST_NAMES[r.nextInt(45)] + " " + LAST_NAMES[r.nextInt(45)]));
 			}
@@ -108,7 +107,6 @@ public class GameController extends JFrame {
 	}
 	
 	public static int getRandomSpeed() {
-		Random rand = new Random();
 		return rand.nextInt(50);
 	}
 
