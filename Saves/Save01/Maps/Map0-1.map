@@ -1,3 +1,4 @@
+enemy,300,300,Donald J. Trump,5,500,35,35,40,Images\\Characters\\RyanNufrio.png,Music\\InLightOfDarkness.mp3,B U I L D  T H E  W A L L
 tree,0,0
 tree,0,651
 tree,45,0
@@ -73,4 +74,4 @@ tree,990,482
 tree,990,522
 tree,990,562
 tree,990,608
-exit,0,605,0,0
+exit,0,605,990,605,0,0

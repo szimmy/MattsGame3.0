@@ -43,7 +43,7 @@ public class ViewPanel extends JPanel {
 	public static final int PLAYER_Y = 39;
 	public static final int B_WIDTH = 1056;
 	public static final int B_HEIGHT = 730;
-	private final int DELAY = 15;
+	private final int DELAY = 15; //DONT CHANGE THIS EVER
 	private ArrayList<Sprite> mapItems;
 	private ArrayList<Sprite> underLayer;
 	private ArrayList<Sprite> overLayer;
@@ -58,8 +58,7 @@ public class ViewPanel extends JPanel {
 	private MenuPanel menu;
 	private GridBagLayout gridbag;
 	private GridBagConstraints centerConstraints;
-	private JPanel spacingOne;
-	private JPanel spacingTwo;
+	private String currentMapFile;
 
 	public ViewPanel(GameController control) {
 		initFlags();
@@ -103,6 +102,7 @@ public class ViewPanel extends JPanel {
 	private void initCollections() {
 		try {
 			mapItems = MapParser.parseMap(0, 0);
+			currentMapFile = "Saves\\Save01\\Maps\\Map" + 0 + "-" + 0 + ".map";
 			updateLayers();
 		}
 		catch(Exception e) {
@@ -148,9 +148,11 @@ public class ViewPanel extends JPanel {
 		timer = new Timer(DELAY, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				inGame();
+				if (!ingame) { //Remove? not needeD?
+					timer.stop();
+				}		
 				updatePlayer();
-				updateNPC();
+				updateNPC(); //Does nothing yet
 				repaint();
 			}
 		});
@@ -166,24 +168,13 @@ public class ViewPanel extends JPanel {
 	}
 
 	private void drawObjects(Graphics g) {
-		for(Sprite sprite : underLayer) {
-				g.drawImage(sprite.getImage(), sprite.getX(), sprite.getY(), this);
-		}
+		underLayer.forEach(sprite -> g.drawImage(sprite.getImage(), sprite.getX(), sprite.getY(), this));
 		
 		if (player.isVisible()) {
 			g.drawImage(player.getImage(), player.getX(), player.getY(), this);
 		}
 		
-		for(Sprite sprite : overLayer) {
-				g.drawImage(sprite.getImage(), sprite.getX(), sprite.getY(), this);
-		}
-		g.setColor(Color.WHITE);
-	}
-
-	private void inGame() {
-		if (!ingame) {
-			timer.stop();
-		}
+		overLayer.forEach(sprite -> g.drawImage(sprite.getImage(), sprite.getX(), sprite.getY(), this));
 	}
 	
 	public void move(Sprite sprite) {
@@ -257,6 +248,11 @@ public class ViewPanel extends JPanel {
 		BattleGUI battlePanel = new BattleGUI(player.getMainPlayer(), enemies, this, mapSprite);
 		if (!battleCurrentlyDisplayed) {
 			battleCurrentlyDisplayed = true;
+			//GridBagConstraints c = new GridBagConstraints();
+			//c = new GridBagConstraints();
+			//c.fill = GridBagConstraints.BOTH;
+			//c.weightx = 1;
+			//c.weighty = 1;
 			addPanel(battlePanel, null);
 			battlePanel.setLocation(280, 290);
 		}
@@ -324,22 +320,16 @@ public class ViewPanel extends JPanel {
 			messageCurrentlyDisplayed = true;
 			GridBagConstraints c = new GridBagConstraints();
 			c = new GridBagConstraints();
-			c.weightx = 0;
+			c.weightx = 1;
 			c.weighty = 1;
+			c.ipadx = 900;
+			c.ipady = 0;
+			c.insets = new Insets(0, 0, 22, 22);
 			if(player.getY() > ViewPanel.B_HEIGHT/2) {
 				c.anchor = GridBagConstraints.NORTH;
+				c.ipady = 0;
 			} else {
-				//TODO Remove these upon removal of message panel??
-				spacingOne = new JPanel();
-				spacingOne.setOpaque(false);
-				c.gridx = 0;
-				c.gridy = 0;
-				this.add(spacingOne, c);
-				spacingTwo = new JPanel();
-				spacingTwo.setOpaque(false);
-				c.gridy = 1;
-				this.add(spacingTwo, c);
-				c.gridy = 2;
+				c.insets = new Insets(550, 0, 22, 22);
 			}
 			addPanel(messagePanel, c);
 			messagePanel.setLocation(0, 960);
@@ -351,11 +341,6 @@ public class ViewPanel extends JPanel {
 	public void removeMessagePanel(MessageGUI message) {
 		messageCurrentlyDisplayed = false;
 		removePanel(message);
-		try {
-			this.remove(spacingOne);
-			this.remove(spacingTwo);
-		} catch (NullPointerException e){}
-
 		this.setFocusable(true);
 		this.requestFocusInWindow();
 	}
@@ -421,8 +406,17 @@ public class ViewPanel extends JPanel {
 	}
 
 	private void itemInteraction(DisplayItem item) {
-		displayMessagePanel("You have picked up a " + item.getItem().getSimpleName() + "!");
+		player.setDX(0);
+		player.setDY(0);
+		displayMessagePanel("You have picked up a " + item.getItem().getSimpleName() + ".");
 		player.getMainPlayer().addItem(item.getItem());
+		/*try {
+			MapParser.removeItem("item", currentMapFile, item.getX(), item.getY());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
 	}
 	
 	private void npcInteraction(Sprite obstacle) {
@@ -444,23 +438,25 @@ public class ViewPanel extends JPanel {
 	
 	public void setMapItems(ArrayList<Sprite> mapItems) {
 		this.mapItems = mapItems;
-		repaint();
 	}
 	
 	private void enemyEncounter() {
 		Random rand = new Random();
-		if (rand.nextInt(1000) < 15) {
+		if (rand.nextInt(1000) < 5) {
 			displayBattlePanel(GameController.getRandomEnemies(3), null);
 		}
 
 	}
 
-	private void updateMapItems(int nextMapX, int nextMapY) {
+	private void updateMapItems(Exit exit) {
 		try {
-			mapItems = MapParser.parseMap(nextMapX, nextMapY);
+			int x = exit.getNextMapX();
+			int y = exit.getNextMapY();
+			mapItems = MapParser.parseMap(x, y);
+			currentMapFile = "Saves\\Save01\\Maps\\Map" + x + "-" + y + ".map";
 			updateLayers();
-			player.setX(500);
-			player.setY(100);
+			player.setX(exit.getNextX());
+			player.setY(exit.getNextY());
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found???");
 		} catch (IOException e) {
@@ -472,7 +468,7 @@ public class ViewPanel extends JPanel {
 		for (Sprite obstacle : mapItems) {
 			if (obstacle.isObstacle() && player.getBounds().intersects(obstacle.getBounds())){
 				if(obstacle instanceof Exit) {
-					updateMapItems(((Exit) obstacle).getNextMapX(), ((Exit) obstacle).getNextMapY());	
+					updateMapItems((Exit) obstacle);	
 				}
 				else {
 					return true;
@@ -482,9 +478,6 @@ public class ViewPanel extends JPanel {
 		return false;
 	}
 	
-	//private boolean collision() {
-	//	mapItems.parallelStream().filter(obstacle -> obstacle.isObstacle()).
-	//}
 
 	private class TAdapter extends KeyAdapter {
 		@Override

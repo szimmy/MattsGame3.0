@@ -1,9 +1,13 @@
 package main;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
 import characters.Enemy;
@@ -101,8 +105,12 @@ public interface MapParser {
 					break;
 				
 				case "exit":
+					//info[1] and info[2] are coordinates of exit placement on map.
+					//info[3] and info [4] are the coordinates of where the player will be placed in the next area
+					//info[5] and info[6] are the coordinates of the next map cell
 					objects.add(new Exit(Integer.parseInt(info[1]), Integer.parseInt(info[2]),
-							Integer.parseInt(info[3]), Integer.parseInt(info[4])));
+							Integer.parseInt(info[3]), Integer.parseInt(info[4]), Integer.parseInt(info[5]),
+							Integer.parseInt(info[6])));
 					break;
 					
 				case "over":
@@ -112,6 +120,10 @@ public interface MapParser {
 				case "under":
 					objects.add(new UnderLayer(Integer.parseInt(info[1]), Integer.parseInt(info[2]), info[3]));
 					break;
+					
+				default: 
+					System.out.println("Removed successfully.");
+					break;
 				}
 				
 				line = br.readLine();
@@ -120,11 +132,28 @@ public interface MapParser {
 		return objects;
 	}
 	
-	public static void removeItem(String key, int x, int y) {
-		
+	public static void removeItem(String tag, String currentMapFile, int x, int y) throws FileNotFoundException, IOException {
+		boolean found = false;
+		int charCounter = 0;
+		try(RandomAccessFile raf = new RandomAccessFile(new File(currentMapFile), "rw")) {
+			String line = raf.readLine();
+			while (line != null && !found) {
+				String[] info = line.split(",");
+				if(info[0].equals(tag) && Integer.parseInt(info[1]) == x && Integer.parseInt(info[2]) == y) {
+					found = true;
+					for(String string : info) {
+						charCounter += string.length();
+					}
+					raf.seek(raf.getFilePointer()-(charCounter+info.length));
+					raf.writeChars("r");
+				} else {
+					line = raf.readLine();
+				}
+			}
+		}		
 	}
 	
-	public static void addItem(String key, int x, int y) {
+	public static void addItem(String tag, int x, int y) {
 		
 	}
 	

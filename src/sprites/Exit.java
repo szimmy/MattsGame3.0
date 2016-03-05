@@ -3,17 +3,21 @@ package sprites;
 public class Exit extends Sprite {
 
 	private String nextMapLocation;
+	private int nextX;
+	private int nextY;
 	private int nextMapX;
 	private int nextMapY;
 	
-	public Exit(int x, int y, int nextMapX, int nextMapY) {
+	public Exit(int x, int y, int nextX, int nextY, int nextMapX, int nextMapY) {
 		super(x, y);
+		this.nextX = nextX;
+		this.nextY = nextY;
 		this.nextMapX = nextMapX;
 		this.nextMapY = nextMapY;
 		initExit();
 	}
 
-	public Exit(int x, int y, String nextMapLocation) {
+	public Exit(int x, int y, int nextX, int nextY, String nextMapLocation) {
 		super(x, y);
 		this.nextMapLocation = nextMapLocation;
 		initExit();
@@ -47,6 +51,22 @@ public class Exit extends Sprite {
 
 	public void setNextMapY(int nextMapY) {
 		this.nextMapY = nextMapY;
+	}
+
+	public int getNextX() {
+		return nextX;
+	}
+
+	public void setNextX(int nextX) {
+		this.nextX = nextX;
+	}
+
+	public int getNextY() {
+		return nextY;
+	}
+
+	public void setNextY(int nextY) {
+		this.nextY = nextY;
 	}
 
 }

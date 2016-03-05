@@ -1,7 +1,7 @@
-enemy,900,605,Ryan Nufrio,3,300,20,20,30,Images\\Characters\\RyanNufrio.png,Music\\InLightOfDarkness.mp3,Please kill me.,We're just on a giant floating rock,in the middle of space.
+enemy,900,605,Ryan Nufrio,3,300,20,20,30,Images\\Characters\\RyanNufrio.png,Music\\InLightOfDarkness.mp3,Please kill me.,We're just on a giant floating rock in the middle of space.,I'm so fucking miserable.
 item,820,345
 item,750,390
-chest,500,500
+chest,350,400
 chest,300,300
 chest,450,450
 chest,45,570
@@ -89,6 +89,6 @@ tree,149,514
 tree,648,189
 tree,168,465
 save,600,600
-exit,1040,605,0,1
+exit,1040,605,30,605,0,1
 customObst,150,400,Images\\SmallCrates.png
-neutral,96,96,Kevin Dunphy,Images\\Characters\\KevinDunphy.png,This is a test message.,There should be three separate dialogue boxes to pop up total.,This is the last one.
+neutral,96,96,Kevin Dunphy,Images\\Characters\\KevinDunphy.png,This is a test message.,There should be four separate dialogue boxes to pop up total.,This message is a test of the maximum length of the dialogue box.,This is the last one.

@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import javax.swing.Timer;
 
 /**
  * GUI class for custom formatted messages
@@ -30,6 +31,12 @@ public class MessageGUI extends JPanel {
 	int messageCounter = 0;
 	private String[] messages;
 	private NPC npc;
+	private int scrollTime = 30; //Milliseconds
+	private String currentDisplay = "";
+	private char[] messageChars;
+	private int scrollIndex = 0;
+	private Timer t;
+	private boolean processing;
 	
 	/**
 	 * Constructor for MessageGUIs that takes a String to be displayed
@@ -43,12 +50,12 @@ public class MessageGUI extends JPanel {
 		
 		initPanels();
 		
-		this.message = new JLabel(message);
-		initMessage();
-		
-		centerPanel.add(this.message);
-		
+		this.message = new JLabel("");
+		initMessage();		
+		centerPanel.add(this.message);		
 		initSettings();
+		
+		scrollMessage(message);
 	}
 	
 	public MessageGUI(String[] message, MainPlayer player, ViewPanel currentView, NPC npc) {
@@ -57,6 +64,7 @@ public class MessageGUI extends JPanel {
 		this.multipleMessages = true;
 		this.messages = message;
 		this.npc = npc;
+		this.currentDisplay = "";
 		JLabel convBubble = new JLabel(new ImageIcon("Images\\Misc\\conversation.png"));
 		
 		initPanels();
@@ -66,22 +74,42 @@ public class MessageGUI extends JPanel {
 			northPanel.setLayout(new FlowLayout());
 			northPanel.setBackground(GameController.BACKGROUND_COLOR_THEME);
 			JLabel nameLabel = new JLabel(npc.getNPC().getName());
-			nameLabel.setFont(GameController.GAME_FONT);
+			nameLabel.setFont(new Font("Cambria", Font.PLAIN, 28));
 			northPanel.add(convBubble);
 			northPanel.add(nameLabel);
 			this.northPanel.add(northPanel);
 		}	
 		
-		this.message = new JLabel(messages[messageCounter]);
+		
+		this.message = new JLabel();
 		centerPanel.add(this.message);
-		
 		initMessage();
-		
 		initSettings();
+		scrollMessage(messages[messageCounter]);
+		//this.message = new JLabel(messages[messageCounter]);
+		//centerPanel.add(this.message);
+	}
+	
+	private void scrollMessage(String toScroll) {
+		scrollIndex = 0;
+		messageChars = toScroll.toCharArray();
+			t = new Timer(scrollTime, event -> {
+				try {
+					processing = true;
+					currentDisplay += messageChars[scrollIndex];
+					message.setText(currentDisplay);
+					scrollIndex++;
+				} catch (ArrayIndexOutOfBoundsException e) {
+					t.stop();
+					processing = false;
+					currentDisplay = "";
+				}
+			});
+		t.start();
 	}
 	
 	private void initMessage() {
-		this.message.setFont(new Font("Cambria", Font.PLAIN, 28));
+		this.message.setFont(new Font("Cambria", Font.PLAIN, 32));
 		this.message.setOpaque(false);
 		this.message.setBackground(GameController.BACKGROUND_COLOR_THEME);
 	}
@@ -91,11 +119,11 @@ public class MessageGUI extends JPanel {
 		spacing.setBackground(GameController.BACKGROUND_COLOR_THEME);
 		
 		northPanel = new JPanel();
-		northPanel.setLayout(new FlowLayout());
+		northPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		northPanel.setBackground(GameController.BACKGROUND_COLOR_THEME);
 		
 		centerPanel = new JPanel();
-		centerPanel.setLayout(new FlowLayout());
+		centerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		centerPanel.setBackground(GameController.BACKGROUND_COLOR_THEME);
 		
 		southPanel = new JPanel();
@@ -104,6 +132,7 @@ public class MessageGUI extends JPanel {
 	}
 	
 	private void initSettings() {
+		this.processing = false;
 		this.addKeyListener(new MessageListener());
 		this.add(centerPanel, BorderLayout.CENTER);
 		this.add(southPanel, BorderLayout.SOUTH);
@@ -113,7 +142,7 @@ public class MessageGUI extends JPanel {
 		this.setBackground(GameController.BACKGROUND_COLOR_THEME);
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 		this.repaint();
-		this.setSize(new Dimension(1400, 960));
+		this.setSize(new Dimension(1000, 200));
 		this.setVisible(true);
 	}
 	
@@ -133,19 +162,18 @@ public class MessageGUI extends JPanel {
 	private class MessageListener implements KeyListener {
 		@Override
 		public void keyPressed(KeyEvent event) {
-			if (event.getKeyCode() == KeyEvent.VK_E) {
+			if (event.getKeyCode() == KeyEvent.VK_E && !processing) {
 				if (multipleMessages) {
 					messageCounter++;
 					if(messages[messageCounter] == null) {
 						checkForBattle();
 						currentView.removeMessagePanel(getInstance());
 					} else {
-						message.setText(messages[messageCounter]);
+						scrollMessage(messages[messageCounter]);
 					}
 				} else {
 					checkForBattle();
 					currentView.removeMessagePanel(getInstance());
-
 				}
 			}
 		}
@@ -153,14 +181,14 @@ public class MessageGUI extends JPanel {
 		public void keyReleased(KeyEvent event) {}
 		@Override
 		public void keyTyped(KeyEvent event) {
-			if (event.getKeyCode() == KeyEvent.VK_E) {
+			if (event.getKeyCode() == KeyEvent.VK_E && !processing) {
 				if (multipleMessages) {
 					messageCounter++;
 					if(messages[messageCounter].isEmpty()) {
 						checkForBattle();
 						currentView.removeMessagePanel(getInstance());
 					} else {
-						message.setText(messages[messageCounter]);
+						scrollMessage(messages[messageCounter]);
 					}
 				} else {
 					checkForBattle();
