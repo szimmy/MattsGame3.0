@@ -6,8 +6,8 @@ chest,300,300
 chest,450,450
 chest,45,570
 chest,907,51
-customObst,945,45,Images\\Torch.png
-customObst,855,45,Images\\Torch.png
+customObst,960,45,Images\\TorchTest.gif
+customObst,880,45,Images\\TorchTest.gif
 tree,0,0
 tree,0,651
 tree,45,0
@@ -89,6 +89,6 @@ tree,149,514
 tree,648,189
 tree,168,465
 save,600,600
-exit,1040,605,30,605,0,1
+exit,1015,605,30,605,0,1
 customObst,150,400,Images\\SmallCrates.png
 neutral,96,96,Kevin Dunphy,Images\\Characters\\KevinDunphy.png,This is a test message.,There should be four separate dialogue boxes to pop up total.,This message is a test of the maximum length of the dialogue box.,This is the last one.

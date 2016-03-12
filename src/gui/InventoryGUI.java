@@ -28,7 +28,7 @@ import java.io.IOException;
  */
 public class InventoryGUI extends JPanel {
 
-	private JButton exit;
+	private GameButton exit;
 	private JPanel centerPanel;
 	private JPanel southPanel;
 	private JPanel eastPanel;
@@ -36,9 +36,9 @@ public class InventoryGUI extends JPanel {
 	private JPanel northPanel;
 	private JPanel itemButtonGroupPanel;
 	private MainPlayer player;
-	private JButton drop;
-	private JButton equip;
-	private JButton consume;
+	private GameButton drop;
+	private GameButton equip;
+	private GameButton consume;
 	private ViewPanel currentView;
 	private JLabel title;
 	private JLabel info;
@@ -73,9 +73,7 @@ public class InventoryGUI extends JPanel {
 		southPanel.setLayout(new BorderLayout());
 		southPanel.setOpaque(false);
 
-		exit = new JButton("Exit");
-		exit.setFont(GameController.GAME_FONT);
-		exit.setBackground(GameController.BUTTON_COLOR_THEME);
+		exit = new GameButton("Exit");
 		exit.addActionListener(event -> {
 			currentView.removeInventoryPanel(this);
 		});
@@ -145,14 +143,13 @@ public class InventoryGUI extends JPanel {
 					/*
 					 * Block for all weapons and armor AKA equippables
 					 */
-					equip = new JButton("Equip");
-					equip.setFont(GameController.GAME_FONT_SMALL);
-					equip.setBackground(GameController.BUTTON_COLOR_THEME);
+					equip = new GameButton("Equip");
 					equip.addActionListener(event -> {
 						if (i instanceof Weapon) {
 							player.equip((Weapon) i);
 						} else if (i instanceof Armor) {
 							player.equip((Armor) i);
+							GameController.playSound("Sounds\\Inventory\\Equip\\leather_inventory.mp3");
 						}
 						redrawInventory();
 						info.setText("Equipped " + i.getSimpleName() + ". ");
@@ -161,9 +158,7 @@ public class InventoryGUI extends JPanel {
 					btnPanel.add(equip);
 
 				} else if (i instanceof Consumable) {
-					consume = new JButton("Consume");
-					consume.setFont(GameController.GAME_FONT_SMALL);
-					consume.setBackground(GameController.BUTTON_COLOR_THEME);
+					consume = new GameButton("Consume");
 					consume.addActionListener(event -> {
 						if (i instanceof Potion) {
 							player.consume((Potion) i);
@@ -175,9 +170,7 @@ public class InventoryGUI extends JPanel {
 					btnPanel.add(consume);
 				}
 
-				drop = new JButton("Drop");
-				drop.setFont(GameController.GAME_FONT_SMALL);
-				drop.setBackground(GameController.BUTTON_COLOR_THEME);
+				drop = new GameButton("Drop");
 				drop.addActionListener(event -> {
 					player.removeSingleItem(i);
 					drop.setEnabled(false);

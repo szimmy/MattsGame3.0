@@ -21,8 +21,8 @@ import java.util.LinkedList;
  */
 public class LootGUI extends JPanel {
 	
-	private JButton takeAll;
-	private JButton exit;
+	private GameButton takeAll;
+	private GameButton exit;
 	private JPanel southPanel;
 	private JPanel northPanel;
 	private JPanel centerPanel;
@@ -49,9 +49,7 @@ public class LootGUI extends JPanel {
 		centerPanel.setBackground(GameController.BACKGROUND_COLOR_THEME);
 		centerPanel.setLayout(new FlowLayout());
 		
-		takeAll = new JButton("Take all");
-		takeAll.setFont(GameController.GAME_FONT);
-		takeAll.setBackground(GameController.BUTTON_COLOR_THEME);
+		takeAll = new GameButton("Take all");
 		takeAll.addActionListener(event -> {
 			for(Item i : items) {
 				player.addItem(i);
@@ -64,16 +62,14 @@ public class LootGUI extends JPanel {
 			this.repaint();
 		});
 				
-		exit = new JButton("Exit");
-		exit.setFont(GameController.GAME_FONT);
-		exit.setBackground(GameController.BUTTON_COLOR_THEME);
+		exit = new GameButton("Exit");
 		exit.addActionListener(event -> currentView.removeLootPanel(this));
 		southPanel.add(exit);
 		
-		items.parallelStream().forEach(i -> {
-			
+		items.stream().forEach(i -> {
 			JPanel itemSection = new JPanel();
 			itemSection.setLayout(new BorderLayout());
+			
 			if(i instanceof Weapon) {
 				itemSection.add(new ItemPanel((Weapon) i));
 			}
@@ -84,9 +80,7 @@ public class LootGUI extends JPanel {
 				itemSection.add(new ItemPanel((Potion) i));
 			}
 			
-			JButton take = new JButton("Take");
-			take.setFont(GameController.GAME_FONT);
-			take.setBackground(GameController.BUTTON_COLOR_THEME);
+			JButton take = new GameButton("Take");
 			take.addActionListener(event -> {
 				if(!player.addItem(i)) {
 					currentView.displayMessagePanel("You cannot carry that.");
@@ -109,8 +103,8 @@ public class LootGUI extends JPanel {
 		this.add(northPanel, BorderLayout.NORTH);
 		this.add(centerPanel, BorderLayout.CENTER);
 		this.add(southPanel, BorderLayout.SOUTH);		
-		this.setMinimumSize(new Dimension(500,200));
-		this.setSize(new Dimension(600,350));
+		//this.setMinimumSize(new Dimension(500,200));
+		//this.setSize(new Dimension(600,350));
 		this.repaint();
 		this.setVisible(true);
 		
@@ -127,7 +121,6 @@ public class LootGUI extends JPanel {
 		}
 		else {
 			southPanel.add(takeAll);
-		}
-		
+		}	
 	}
 }

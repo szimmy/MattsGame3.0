@@ -42,11 +42,11 @@ public class BattleGUI extends JPanel {
 	private ArrayList<Enemy> slowEnemies; //Enemies which are slow than the player
 	//Enemies are sorted into appropriate collections when the player attacks. 
 	
-	private JButton attack;
-	private JButton special;
-	private JButton inventory;
-	private JButton stats;
-	private JButton flee;
+	private GameButton attack;
+	private GameButton special;
+	private GameButton inventory;
+	private GameButton stats;
+	private GameButton flee;
 	private JPanel playerOptions;
 	private JPanel battlePanel;
 	private ArrayList<JComponent> enemyImages;
@@ -142,33 +142,23 @@ public class BattleGUI extends JPanel {
 		playerPanel = new JPanel();
 		enemyPanel.setLayout(new FlowLayout());
 		playerPanel.setLayout(new GridLayout(2,0));
-		attack = new JButton("Attack");
-		attack.setFont(GameController.GAME_FONT);
-		attack.setBackground(GameController.BUTTON_COLOR_THEME);
+		attack = new GameButton("Attack");
 		attack.addActionListener(new AttackListener());
 		
-		special = new JButton("Special");
-		special.setFont(GameController.GAME_FONT);
-		special.setBackground(GameController.BUTTON_COLOR_THEME);
+		special = new GameButton("Special");
 		special.addActionListener(event -> Runtime.getRuntime().gc());
 		
-		inventory = new JButton("Inventory");
-		inventory.setFont(GameController.GAME_FONT);
-		inventory.setBackground(GameController.BUTTON_COLOR_THEME);
+		inventory = new GameButton("Inventory");
 		inventory.addActionListener(event -> {
 			currentView.displayInventoryPanel(player.getInventory());
 		});
 		
-		stats = new JButton("Stats");
-		stats.setFont(GameController.GAME_FONT);
-		stats.setBackground(GameController.BUTTON_COLOR_THEME);
+		stats = new GameButton("Stats");
 		stats.addActionListener(event -> {
 			currentView.displayStatsPanel(player);
 		});
 		
-		flee = new JButton("Flee");
-		flee.setFont(GameController.GAME_FONT);
-		flee.setBackground(GameController.BUTTON_COLOR_THEME);
+		flee = new GameButton("Flee");
 		flee.addActionListener(new FleeListener());
 				
 		playerOptions = new JPanel();
@@ -288,7 +278,7 @@ public class BattleGUI extends JPanel {
 		playerFormatter.setOpaque(false);
 		playerPanel.setLayout(new GridLayout(0,1));
 		playerPanel.setOpaque(false);
-		JLabel name = new JLabel(player.getName(), SwingConstants.CENTER);
+		JLabel name = new JLabel("Lvl " + player.getLvl() + " - " + player.getName(), SwingConstants.CENTER);
 		name.setFont(GameController.GAME_FONT);
 		playerPanel.add(name);
 		playerPanel.add(new JLabel(new ImageIcon(MainPlayer.FACING_EAST)));
@@ -316,7 +306,7 @@ public class BattleGUI extends JPanel {
 			if (!enemy.getIsDead()) {
 			JPanel enemyFormatter = new JPanel();
 			JPanel secondLevelFormatter = new JPanel();
-			JLabel name = new JLabel(enemy.getName(), SwingConstants.CENTER);
+			JLabel name = new JLabel("Lvl " + enemy.getLvl() + " - " + enemy.getName(), SwingConstants.CENTER);
 			name.setFont(GameController.GAME_FONT);
 			StatusBarPanel enemyHealth = new StatusBarPanel("Health", enemy.getCurrentHP(), enemy.getMaxHP());
 			enemyHealthBars[enemiesLeft] = enemyHealth;

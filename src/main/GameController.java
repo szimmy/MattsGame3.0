@@ -33,6 +33,8 @@ public class GameController extends JFrame {
 	public static final Color BUTTON_COLOR_THEME = Color.LIGHT_GRAY;
 	public static final Color BUTTON_TEXT_COLOR = Color.BLACK;
 	public static final Color BACKGROUND_COLOR_THEME = Color.GRAY;
+	public static final Color MESSAGE_PANEL_BACKGROUND = Color.BLACK;
+	public static final Color MESSAGE_PANEL_TEXT = Color.WHITE;
 	public static final int TIMER_CONTROLLER = 40;
 	public static double voiceVolume = .8;
 	public static double effectVolume = .5;
@@ -74,7 +76,7 @@ public class GameController extends JFrame {
     	
 		try {
 			BufferedImage myImage = ImageIO.read(new File("Images\\GrassBackgroundBIG.png"));
-			setContentPane(new ImagePanel(myImage));
+			this.setContentPane(new ImagePanel(myImage));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -83,13 +85,13 @@ public class GameController extends JFrame {
 		
         this.add(new ViewPanel(this));
         
-        setResizable(false);
-        pack();
+        this.setResizable(false);
+        this.pack();
         
-        setTitle("Matt's Game 3.0");
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(new Dimension(ViewPanel.B_WIDTH,ViewPanel.B_HEIGHT)); 	
+        this.setTitle("Matt's Game 3.0");
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(new Dimension(ViewPanel.B_WIDTH, ViewPanel.B_HEIGHT)); 	
     }
     
 	public static ArrayList<Enemy> getRandomEnemies(int maxNumEnemies) {
@@ -98,8 +100,7 @@ public class GameController extends JFrame {
 		for(int i = 0; i < r.nextInt(maxNumEnemies)+1; i++) { //+1 to guarantee at least 1 enemy
 			if(r.nextInt(2) == 1) {
 				enemies.add(new Enemy(MALE_FIRST_NAMES[r.nextInt(45)] + " " + LAST_NAMES[r.nextInt(45)]));
-			}
-			else {
+			} else {
 				enemies.add(new Enemy(FEMALE_FIRST_NAMES[r.nextInt(39)] + " " + LAST_NAMES[r.nextInt(45)]));
 			}
 		}

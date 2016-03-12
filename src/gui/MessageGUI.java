@@ -1,12 +1,10 @@
 package gui;
 
 import javax.swing.*;
-
 import characters.Enemy;
 import characters.MainPlayer;
 import main.GameController;
 import sprites.NPC;
-
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -86,8 +84,6 @@ public class MessageGUI extends JPanel {
 		initMessage();
 		initSettings();
 		scrollMessage(messages[messageCounter]);
-		//this.message = new JLabel(messages[messageCounter]);
-		//centerPanel.add(this.message);
 	}
 	
 	private void scrollMessage(String toScroll) {

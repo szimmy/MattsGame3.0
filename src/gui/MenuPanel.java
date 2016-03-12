@@ -6,19 +6,21 @@ import javax.swing.*;
 import main.GameController;
 import main.SaveManager;
 import sprites.Player;
+import sprites.Sprite;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MenuPanel extends JPanel {
 
-	private JButton options;
-	private JButton stats; 
-	private JButton inventory;
-	private JButton exit;
-	private JButton quit;
+	private GameButton options;
+	private GameButton stats; 
+	private GameButton inventory;
+	private GameButton exit;
+	private GameButton quit;
 	private JPanel innerPanel;
 	private ViewPanel currentView;
 	private JButton load;
@@ -29,77 +31,57 @@ public class MenuPanel extends JPanel {
 	public MenuPanel(ViewPanel currentView) {
 		this.currentView = currentView;
 		
-		inventory = new JButton("Inventory");
-		inventory.setFont(GameController.GAME_FONT);
-		inventory.setForeground(GameController.BUTTON_TEXT_COLOR);
-		inventory.setOpaque(false);
+		inventory = new GameButton("Inventory");
 		inventory.setContentAreaFilled(false);
 		inventory.setBorderPainted(false);	
-		//inventory.setBackground(GameController.BUTTON_COLOR_THEME);
 		inventory.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		inventory.addActionListener(event -> {
 				currentView.displayInventoryPanel(currentView.getPlayer().getMainPlayer().getInventory());
 				currentView.toggleMenu();
 		});
 		
-		exit = new JButton("Exit");
-		exit.setForeground(GameController.BUTTON_TEXT_COLOR);
-		exit.setOpaque(false);
+		exit = new GameButton("Exit");
 		exit.setContentAreaFilled(false);
 		exit.setBorderPainted(false);
-		//exit.setBackground(GameController.BUTTON_COLOR_THEME);
-		exit.setFont(GameController.GAME_FONT);
 		exit.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		exit.addActionListener(event -> {
 			currentView.toggleMenu();
 		});
 		
-		stats = new JButton("Stats");
-		stats.setForeground(GameController.BUTTON_TEXT_COLOR);
-		stats.setOpaque(false);
+		stats = new GameButton("Stats");
 		stats.setContentAreaFilled(false);
 		stats.setBorderPainted(false);
-		//stats.setBackground(GameController.BUTTON_COLOR_THEME);
-		stats.setFont(GameController.GAME_FONT);
 		stats.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		stats.addActionListener(event -> {
 			currentView.displayStatsPanel(currentView.getPlayer().getMainPlayer());
 			currentView.toggleMenu();
 		});
 		
-		options = new JButton("Options");
-		options.setForeground(GameController.BUTTON_TEXT_COLOR);
-		options.setOpaque(false);
+		options = new GameButton("Options");
 		options.setContentAreaFilled(false);
 		options.setBorderPainted(false);
-		//options.setBackground(GameController.BUTTON_COLOR_THEME);
-		options.setFont(GameController.GAME_FONT);
 		options.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		options.addActionListener(event ->  {
 			currentView.displaySettingsPanel(currentView.getPlayer().getMainPlayer());
 			currentView.toggleMenu();
 		});
 		
-		load = new JButton("Load");
-		load.setForeground(GameController.BUTTON_TEXT_COLOR);
-		load.setOpaque(false);
+		load = new GameButton("Load");
 		load.setContentAreaFilled(false);
 		load.setBorderPainted(false);
-		//load.setBackground(GameController.BUTTON_COLOR_THEME);
-		load.setFont(GameController.GAME_FONT);
 		load.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		load.addActionListener(event -> {
 			currentView.toggleMenu();
-			currentView.setMapItems(SaveManager.deserialize());			
+			ArrayList<Sprite> newMap = SaveManager.deserialize();
+			currentView.setPlayer((Player) newMap.get(0)); //Player sprite is at index 0 of saved array. 
+			newMap.remove(0); 							   //Removes from saved array 
+			currentView.setMapItems(newMap);	
+			currentView.updateLayers();
 		});
 		
-		quit = new JButton("Quit");
-		// quit.setBackground(GameController.BUTTON_COLOR_THEME);
-		quit.setForeground(GameController.BUTTON_TEXT_COLOR);
-		quit.setOpaque(false);
+		quit = new GameButton("Quit");
 		quit.setContentAreaFilled(false);
 		quit.setBorderPainted(false);
-		quit.setFont(GameController.GAME_FONT);
 		quit.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		quit.addActionListener(event -> {
 			currentView.getController().dispose();

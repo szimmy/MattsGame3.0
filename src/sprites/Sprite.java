@@ -22,8 +22,8 @@ public abstract class Sprite implements Serializable {
     protected int width;
     protected int height;
     protected boolean visible;
-    protected transient Image image;
-    protected String imageLocation;
+    protected transient Image image; //Image is not serializable so  has to be transient
+    protected String imageLocation; //The image location is saved as well so we can reload the image on load
     protected boolean isObstacle;
     private ImageIcon i;
     protected String[] message;
