@@ -16,7 +16,7 @@ public class Lootable extends Sprite {
 		loadImage("Images\\ChestArea.png");
 		getImageDimensions();
 		this.items = new LinkedList<Item>();
-		items = Item.generateRandomItem(2);
+		items = Item.generateRandomItem(3);
 	}
 	
 	//TODO: Make constructor for different images

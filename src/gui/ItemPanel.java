@@ -26,6 +26,7 @@ public class ItemPanel extends JPanel {
 	private JLabel value;
 	private JLabel imageLabel;
 	private JLabel amount;
+	private JLabel healthStat;
 	private JPanel northPanel;
 	private JPanel eastPanel;
 	private JPanel southPanel;
@@ -82,7 +83,7 @@ public class ItemPanel extends JPanel {
 		
 		itemImage = new ImageIcon(p.getImageLocation());
 		
-		JLabel healthStat = new JLabel("Hp: " + p.getAmount());
+		healthStat = new JLabel("Hp: " + p.getAmount());
 		healthStat.setFont(GameController.GAME_FONT_SMALL);
 		amount = new JLabel("Amt: 1");
 		amount.setFont(GameController.GAME_FONT_SMALL);

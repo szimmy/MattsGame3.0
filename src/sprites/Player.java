@@ -20,6 +20,7 @@ import main.GameController;
 
 public class Player extends Sprite {
 	
+    private int playerSpeed = 2;
 	private MainPlayer player;
 	
 	public Player(int x, int y, MainPlayer player) {
@@ -36,6 +37,14 @@ public class Player extends Sprite {
  
     public MainPlayer getMainPlayer() {
     	return player;
+    }
+    
+    public int getSpriteSpeed() {
+ 	   return this.playerSpeed;
+    }
+    
+    public void setSpriteSpeed(int playerSpeed) {
+ 	   this.playerSpeed = playerSpeed;
     }
 }
     

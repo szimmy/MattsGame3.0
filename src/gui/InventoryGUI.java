@@ -1,8 +1,7 @@
 package gui;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
 
+import javax.swing.*;
 import characters.MainPlayer;
 import items.Item;
 import items.Armor.Armor;
@@ -10,15 +9,8 @@ import items.Consumables.Consumable;
 import items.Consumables.Potion;
 import items.Weapons.Weapon;
 import main.GameController;
-import sprites.Player;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+
 
 /**
  * GUI class that builds the inventory screen
@@ -26,6 +18,7 @@ import java.io.IOException;
  * @author Matthew Gimbut
  *
  */
+@Deprecated
 public class InventoryGUI extends JPanel {
 
 	private GameButton exit;
@@ -75,7 +68,7 @@ public class InventoryGUI extends JPanel {
 
 		exit = new GameButton("Exit");
 		exit.addActionListener(event -> {
-			currentView.removeInventoryPanel(this);
+			//currentView.removeInventoryPanel(this);
 		});
 
 		info = new JLabel("Choose an option.");
@@ -141,7 +134,7 @@ public class InventoryGUI extends JPanel {
 
 				if (i instanceof Armor || i instanceof Weapon) {
 					/*
-					 * Block for all weapons and armor AKA equippables
+					 * Block for all weapons and armor AKA equipables
 					 */
 					equip = new GameButton("Equip");
 					equip.addActionListener(event -> {

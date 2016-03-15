@@ -317,7 +317,7 @@ public class ViewPanel extends JPanel {
 	 * @param inventory A LinkedList containing all of the items in the player's inventory.
 	 */
 	public void displayInventoryPanel(LinkedList<Item> inventory) {
-		InventoryGUI invPanel = new InventoryGUI(player.getMainPlayer(), this);
+		TabbedInventory invPanel = new TabbedInventory(player.getMainPlayer(), this);
 		if (!inventoryCurrentlyDisplayed) {
 			inventoryCurrentlyDisplayed = true;
 			addPanel(invPanel, null);
@@ -329,7 +329,7 @@ public class ViewPanel extends JPanel {
 	 * Removes a previously added inventory panel from the screen. 
 	 * @param panel The inventory panel to be removed. 
 	 */
-	public void removeInventoryPanel(InventoryGUI panel) {
+	public void removeInventoryPanel(TabbedInventory panel) {
 		inventoryCurrentlyDisplayed = false;
 		removePanel(panel);
 	}
@@ -689,7 +689,14 @@ public class ViewPanel extends JPanel {
 			if (!engaged()) {
 				switch (key) {
 				case KeyEvent.VK_E:
-					//Seemingly random values added/subtracted from the position 
+					/*
+					 * Seemingly random values added/subtracted from the position
+					 * are there for the purpose of proper placement of the rectangle
+					 * that checks for interactions. 
+					 * 
+					 * Honestly I don't remember how I even decided on these values,
+					 * but they work so yeah.
+					 */
 					if (player.getImageLocation().equals(MainPlayer.FACING_NORTH)) {
 						interact(player.getX(), player.getY() - ViewPanel.PLAYER_Y + 20);
 					} else if (player.getImageLocation().equals(MainPlayer.FACING_SOUTH)) {

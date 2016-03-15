@@ -22,18 +22,16 @@ public class MenuPanel extends JPanel {
 	private GameButton exit;
 	private GameButton quit;
 	private JPanel innerPanel;
-	private ViewPanel currentView;
 	private JButton load;
-	private static final int BUTTON_DISTANCE = 5;
-	private static final int BUTTON_LR_SIZE = 6;
+	private static final int BUTTON_DISTANCE = 5; 
+	private static final int BUTTON_LR_SIZE = 6; 
 	private static final int BUTTON_UD_SIZE = 3;
 	
 	public MenuPanel(ViewPanel currentView) {
-		this.currentView = currentView;
 		
 		inventory = new GameButton("Inventory");
-		inventory.setContentAreaFilled(false);
-		inventory.setBorderPainted(false);	
+		//inventory.setContentAreaFilled(false);
+		//inventory.setBorderPainted(false);	
 		inventory.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		inventory.addActionListener(event -> {
 				currentView.displayInventoryPanel(currentView.getPlayer().getMainPlayer().getInventory());
@@ -41,16 +39,16 @@ public class MenuPanel extends JPanel {
 		});
 		
 		exit = new GameButton("Exit");
-		exit.setContentAreaFilled(false);
-		exit.setBorderPainted(false);
+		//exit.setContentAreaFilled(false);
+		//exit.setBorderPainted(false);
 		exit.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		exit.addActionListener(event -> {
 			currentView.toggleMenu();
 		});
 		
 		stats = new GameButton("Stats");
-		stats.setContentAreaFilled(false);
-		stats.setBorderPainted(false);
+		//stats.setContentAreaFilled(false);
+		//stats.setBorderPainted(false);
 		stats.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		stats.addActionListener(event -> {
 			currentView.displayStatsPanel(currentView.getPlayer().getMainPlayer());
@@ -58,8 +56,8 @@ public class MenuPanel extends JPanel {
 		});
 		
 		options = new GameButton("Options");
-		options.setContentAreaFilled(false);
-		options.setBorderPainted(false);
+		//options.setContentAreaFilled(false);
+		//options.setBorderPainted(false);
 		options.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		options.addActionListener(event ->  {
 			currentView.displaySettingsPanel(currentView.getPlayer().getMainPlayer());
@@ -67,8 +65,8 @@ public class MenuPanel extends JPanel {
 		});
 		
 		load = new GameButton("Load");
-		load.setContentAreaFilled(false);
-		load.setBorderPainted(false);
+		//load.setContentAreaFilled(false);
+		//load.setBorderPainted(false);
 		load.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		load.addActionListener(event -> {
 			currentView.toggleMenu();
@@ -80,8 +78,8 @@ public class MenuPanel extends JPanel {
 		});
 		
 		quit = new GameButton("Quit");
-		quit.setContentAreaFilled(false);
-		quit.setBorderPainted(false);
+		//quit.setContentAreaFilled(false);
+		//quit.setBorderPainted(false);
 		quit.setBorder(BorderFactory.createEmptyBorder(BUTTON_UD_SIZE, BUTTON_LR_SIZE, BUTTON_UD_SIZE, BUTTON_LR_SIZE));
 		quit.addActionListener(event -> {
 			currentView.getController().dispose();

@@ -8,9 +8,7 @@ public class Driver {
 		 EventQueue.invokeLater(new Runnable() {
 	            @Override
 	            public void run() {
-	            	GameController ex = new GameController();
-	            	ex.getContentPane().setLayout(null);
-	                ex.setVisible(true);
+	            	GameController.getInstance();
 	            }
 	     });
 	}

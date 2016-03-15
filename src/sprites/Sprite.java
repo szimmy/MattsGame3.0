@@ -16,7 +16,6 @@ public abstract class Sprite implements Serializable {
 
     protected int dx;
     protected int dy;
-    protected int playerSpeed = 2;
     protected int x;
     protected int y;
     protected int width;
@@ -41,9 +40,9 @@ public abstract class Sprite implements Serializable {
     }
 
     public void loadImage(String imageName) {
-    	imageLocation = imageName;
-        i = new ImageIcon(imageName);
-        image = i.getImage();
+    	this.imageLocation = imageName;
+        this.i = new ImageIcon(imageName);
+        this.image = i.getImage();
     }
 
     public Image getImage() {
@@ -81,16 +80,7 @@ public abstract class Sprite implements Serializable {
    
    public void setY(int y) {
 	   this.y = y;
-   }
-   
-   public int getSpriteSpeed() {
-	   return this.playerSpeed;
-   }
-   
-   public void setSpriteSpeed(int playerSpeed) {
-	   this.playerSpeed = playerSpeed;
-   }
-    
+   }    
 
     public String getImageLocation() {
     	return imageLocation;

@@ -3,6 +3,7 @@ package main;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -31,10 +32,11 @@ import javafx.scene.media.MediaPlayer;
 public class GameController extends JFrame {
 
 	public static final Color BUTTON_COLOR_THEME = Color.LIGHT_GRAY;
+	public static final Color LIGHTER_GRAY = new Color(-1118482);
+	public static final Color DARKER_GRAY = new Color(160,160,160);
 	public static final Color BUTTON_TEXT_COLOR = Color.BLACK;
 	public static final Color BACKGROUND_COLOR_THEME = Color.GRAY;
 	public static final Color MESSAGE_PANEL_BACKGROUND = Color.BLACK;
-	public static final Color MESSAGE_PANEL_TEXT = Color.WHITE;
 	public static final int TIMER_CONTROLLER = 40;
 	public static double voiceVolume = .8;
 	public static double effectVolume = .5;
@@ -44,6 +46,7 @@ public class GameController extends JFrame {
 	private static Media sound;
 	private static MediaPlayer soundPlayer;
 	private static Random rand = new Random();
+	private static GameController game;
 	
 	
 	public static final String[] FEMALE_FIRST_NAMES = { "Mary", "Elizabeth", "Jennifer", "Maria", "Nancy", "Michelle", "Sarah", "Kim",
@@ -63,31 +66,58 @@ public class GameController extends JFrame {
 			"Parker", "Morris", "Collins", "Cook", "Rivera", "Rogers", "Reed", "Bell", "Stewart", "Bailey", "Wood",
 			"Jenkins", "Nufrio", "Leong", "Gimbut", "Trump" };
 	
-    public GameController() {
-    	UIManager.put("ToolTip.font", new FontUIResource(GAME_FONT));
-    	UIManager.put("ToolTip.background", new ColorUIResource(BUTTON_COLOR_THEME));
-    	javax.swing.border.Border border = BorderFactory.createLineBorder(new Color(0,0,0));
-    	UIManager.put("ToolTip.border", border);
-    	ToolTipManager.sharedInstance().setDismissDelay(15000);
+	public static GameController getInstance() {
+		if (game == null) {
+			game = new GameController();
+			game.getContentPane().setLayout(null);
+			game.setVisible(true);
+		}
+		return game;
+	}
+	
+    private GameController() {
+    	initUIManager();
         initUI();
     }
     
-    private void initUI() {  
+    private void initUIManager() {
+    	UIManager.put("ToolTip.font", new FontUIResource(GAME_FONT));
+    	UIManager.put("ToolTip.background", new ColorUIResource(BUTTON_COLOR_THEME));
+    	UIManager.put("ToolTip.border", BorderFactory.createLineBorder(new Color(0,0,0)));
     	
+    	UIManager.put("TabbedPane.background", BUTTON_COLOR_THEME);
+    	UIManager.put("TabbedPane.font", GAME_FONT);
+    	UIManager.put("TabbedPane.contentAreaColor", BUTTON_COLOR_THEME);
+    	UIManager.put("TabbedPane.foreground", BUTTON_TEXT_COLOR);
+        UIManager.put("TabbedPane.borderHightlightColor", Color.BLACK); 
+        UIManager.put("TabbedPane.light", Color.BLACK);
+        UIManager.put("TabbedPane.selectHighlight", Color.BLACK);
+        UIManager.put("TabbedPane.darkShadow", Color.BLACK);
+        UIManager.put("TabbedPane.focus", Color.YELLOW); //Only the inner border of the selected tab
+        UIManager.put("TabbedPane.selected",  Color.YELLOW); //The inner, actual background color of the tab
+        UIManager.put("TabbedPane.borderHighlightColor", Color.BLACK);
+        UIManager.put("TabbedPane.tabsOverlapBorder", false);
+        
+        UIManager.put("Button.select", GameController.DARKER_GRAY);
+        UIManager.put("Button.highlight", Color.BLACK);
+        
+        UIManager.put("Label.foreground", Color.BLACK);
+        UIManager.put("Label.font", GAME_FONT);
+        
+    	ToolTipManager.sharedInstance().setDismissDelay(15000);
+    }
+    
+    private void initUI() {  
 		try {
 			BufferedImage myImage = ImageIO.read(new File("Images\\GrassBackgroundBIG.png"));
 			this.setContentPane(new ImagePanel(myImage));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    	
 		this.setIconImage(new ImageIcon("Images\\Player\\PlayerSouth.png").getImage());
-		
         this.add(new ViewPanel(this));
-        
         this.setResizable(false);
         this.pack();
-        
         this.setTitle("Matt's Game 3.0");
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

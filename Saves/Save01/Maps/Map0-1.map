@@ -1,4 +1,4 @@
-enemy,300,300,Donald J. Trump,5,500,35,35,40,Images\\Characters\\RyanNufrio.png,Music\\InLightOfDarkness.mp3,B U I L D  T H E  W A L L
+enemy,300,300,Boss #1,5,500,35,35,40,Images\\Characters\\RyanNufrio.png,Music\\InLightOfDarkness.mp3,[Put a message in here]
 tree,0,0
 tree,0,651
 tree,45,0
