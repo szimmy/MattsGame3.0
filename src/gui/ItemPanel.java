@@ -61,6 +61,18 @@ public class ItemPanel extends JPanel {
 		secondSetUp();
 	}
 	
+	public ItemPanel(String type) {
+		firstSetUp();
+		
+		if (type.equals("placeholder")) {
+			itemImage = new ImageIcon("Images\\Blank.png");
+		}
+		
+		imageLabel = new JLabel(itemImage);
+		secondSetUp();
+	}
+	
+	
 	/**
 	 * Same as above, except takes an item as a parameter and builds the panel around it.
 	 * @param i The item to be displayed

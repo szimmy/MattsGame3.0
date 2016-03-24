@@ -8,6 +8,7 @@ public class Exit extends Sprite {
 	private int nextMapX;
 	private int nextMapY;
 	
+	@Deprecated
 	public Exit(int x, int y, int nextX, int nextY, int nextMapX, int nextMapY) {
 		super(x, y);
 		this.nextX = nextX;
@@ -19,6 +20,8 @@ public class Exit extends Sprite {
 
 	public Exit(int x, int y, int nextX, int nextY, String nextMapLocation) {
 		super(x, y);
+		this.nextX = nextX;
+		this.nextY = nextY;
 		this.nextMapLocation = nextMapLocation;
 		initExit();
 	}

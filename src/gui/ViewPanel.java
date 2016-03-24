@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import characters.Enemy;
 import characters.MainPlayer;
@@ -50,6 +53,7 @@ public class ViewPanel extends JPanel {
 	private ArrayList<Sprite> mapItems;
 	private ArrayList<Sprite> underLayer;
 	private ArrayList<Sprite> overLayer;
+	private ArrayList<Sprite> collisions;
 	private GameController control;
 	private boolean menuCurrentlyDisplayed;
 	private boolean battleCurrentlyDisplayed;
@@ -58,11 +62,14 @@ public class ViewPanel extends JPanel {
 	private boolean lootCurrentlyDisplayed;
 	private boolean settingsCurrentlyDisplayed;
 	private boolean messageCurrentlyDisplayed;
+	private boolean hostile;
 	private MenuPanel menu;
 	private GridBagLayout gridbag;
 	private GridBagConstraints centerConstraints;
 	private String currentMapFile;
-
+	private MapParser mapParser;
+	private Image image;
+	
 	/**
 	 * Constructor that takes a GameController object only.
 	 * @param control The GameController JFrame that holds the ViewPanel.
@@ -70,6 +77,7 @@ public class ViewPanel extends JPanel {
 	public ViewPanel(GameController control) {
 		initFlags();
 		this.control = control;
+		mapParser = new MapParser(this);
 		initCollections();
 		initPanel();
 	}
@@ -82,6 +90,7 @@ public class ViewPanel extends JPanel {
 	public ViewPanel(GameController control, Player player) {
 		this.control = control;
 		this.player = player;
+		mapParser = new MapParser(this);
 		initFlags();
 		initCollections();
 		initPanel();
@@ -126,8 +135,9 @@ public class ViewPanel extends JPanel {
 	 */
 	private void initCollections() {
 		try {
-			mapItems = MapParser.parseMap(0, 0);
-			setCurrentMapFile("Saves\\Save01\\Maps\\Map" + 0 + "-" + 0 + ".map");
+			String map = "Saves\\Save01\\Maps\\Map0-1.map";
+			mapItems = mapParser.parseMap(map);
+			setCurrentMapFile(map);
 			updateLayers();
 		}
 		catch(Exception e) {
@@ -141,13 +151,21 @@ public class ViewPanel extends JPanel {
 	void updateLayers() {
 		underLayer = (ArrayList<Sprite>) mapItems.stream()
 				.filter(sprite -> sprite instanceof UnderLayer)
-				.filter(sprite -> sprite.isVisible())
+				.filter(Sprite::isVisible)
 				.collect(Collectors.toList());
 		
 		overLayer = (ArrayList<Sprite>) mapItems.stream()
 				.filter(sprite -> !(sprite instanceof UnderLayer))
-				.filter(sprite -> sprite.isVisible())
+				.filter(Sprite::isVisible)
 				.collect(Collectors.toList());
+		
+		collisions = (ArrayList<Sprite>) mapItems.stream()
+				.filter(Sprite::isObstacle)
+				.collect(Collectors.toList());
+	}
+	
+	public void setBackground(String file) throws IOException {
+		image = ImageIO.read(new File(file));
 	}
 	
 	/**
@@ -159,14 +177,15 @@ public class ViewPanel extends JPanel {
 		this.addKeyListener((KeyListener) new TAdapter());
 		this.setFocusable(true);
 		menu = new MenuPanel(this); //TODO: Not sure why this line is here? Check later
-		
+			
 		gridbag = new GridBagLayout();
 		centerConstraints = new GridBagConstraints();
 		centerConstraints.fill = GridBagConstraints.CENTER;
 		gridbag.setConstraints(this, centerConstraints);
 		this.setLayout(gridbag);
 		this.setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
-
+		
+		
 		if (player == null) {
 			player = new Player(500, 100, new MainPlayer("Matthew Gimbut"));
 		}
@@ -189,6 +208,7 @@ public class ViewPanel extends JPanel {
 	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		g.drawImage(image, 0, 0, this);
 		drawLayers(g);
 		Toolkit.getDefaultToolkit().sync();
 	}
@@ -279,6 +299,7 @@ public class ViewPanel extends JPanel {
 			GridBagConstraints c = new GridBagConstraints();
 			c = new GridBagConstraints();
 			c.anchor = GridBagConstraints.NORTHWEST;
+			c.insets = new Insets(6,6,6,6);
 			c.weightx = 1;
 			c.weighty = 1;
 			addPanel(menu, c);
@@ -339,7 +360,7 @@ public class ViewPanel extends JPanel {
 	 * @param player The MainPlayer object (not its sprite) that is the player's character. 
 	 */
 	public void displaySettingsPanel(MainPlayer player) {
-		SettingsGUI settings = new SettingsGUI(player, this);
+		SettingsPanel settings = new SettingsPanel(player, this);
 		if (!settingsCurrentlyDisplayed) {
 			settingsCurrentlyDisplayed = true;
 			addPanel(settings, null);
@@ -351,7 +372,7 @@ public class ViewPanel extends JPanel {
 	 * Removes a previously added settings panel from the screen. 
 	 * @param settings The settings panel to be removed. 
 	 */
-	public void removeSettingsPanel(SettingsGUI settings) {
+	public void removeSettingsPanel(SettingsPanel settings) {
 		settingsCurrentlyDisplayed = false;
 		removePanel(settings);
 	}
@@ -410,16 +431,16 @@ public class ViewPanel extends JPanel {
 			messageCurrentlyDisplayed = true;
 			GridBagConstraints c = new GridBagConstraints();
 			c = new GridBagConstraints();
-			c.weightx = 1;
-			c.weighty = 1;
 			c.ipadx = 900;
 			c.ipady = 0;
-			c.insets = new Insets(0, 0, 22, 22);
+			c.insets = new Insets(12, 12, 22, 22);
+			c.weightx = 1;
+			c.weighty = 1;
 			if(player.getY() > ViewPanel.B_HEIGHT/2) {
 				c.anchor = GridBagConstraints.NORTH;
 				c.ipady = 0;
 			} else {
-				c.insets = new Insets(550, 0, 22, 22);
+				c.insets = new Insets(550, 12, 22, 22);
 			}
 			addPanel(messagePanel, c);
 			messagePanel.setLocation(0, 960);
@@ -591,9 +612,11 @@ public class ViewPanel extends JPanel {
 	 *  Determines random enemy encounter. 
 	 */
 	private void enemyEncounter() {
-		Random rand = new Random();
-		if (rand.nextInt(1000) < 2) {
-			displayBattlePanel(GameController.getRandomEnemies(3), null);
+		if (hostile) {
+			Random rand = new Random();
+			if (rand.nextInt(1000) < 2) {
+				displayBattlePanel(GameController.getRandomEnemies(3), null);
+			}
 		}
 	}
 
@@ -603,10 +626,9 @@ public class ViewPanel extends JPanel {
 	 */
 	private void updateMapItems(Exit exit) {
 		try {
-			int x = exit.getNextMapX(); 
-			int y = exit.getNextMapY();
-			mapItems = MapParser.parseMap(x, y);
-			setCurrentMapFile("Saves\\Save01\\Maps\\Map" + x + "-" + y + ".map"); //Sets the current map file and map items to the new map.
+			String nextMap = exit.getNextMapLocation();
+			mapItems = mapParser.parseMap(nextMap);
+			setCurrentMapFile(nextMap); //Sets the current map file and map items to the new map.
 			updateLayers(); //Updates the upper and lower layers for the new map.
 			player.setX(exit.getNextX()); //Sets the player to the appropriate coordinates in the new area.
 			player.setY(exit.getNextY());
@@ -622,8 +644,8 @@ public class ViewPanel extends JPanel {
 	 * @return
 	 */
 	private boolean collision() {
-		for (Sprite obstacle : mapItems) {
-			if (obstacle.isObstacle() && player.getBounds().intersects(obstacle.getBounds())){
+		for (Sprite obstacle : collisions) {
+			if (player.getBounds().intersects(obstacle.getBounds())){
 				if(obstacle instanceof Exit) { 
 					updateMapItems((Exit) obstacle);	//Moves the player to the next area if they move on an exit.
 				} else {
@@ -634,6 +656,14 @@ public class ViewPanel extends JPanel {
 		return false;
 	}
 	
+	public boolean isHostile() {
+		return hostile;
+	}
+
+	public void setHostile(boolean hostile) {
+		this.hostile = hostile;
+	}
+
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
@@ -662,7 +692,7 @@ public class ViewPanel extends JPanel {
 		public void keyReleased(KeyEvent e) {
 			int key = e.getKeyCode();
 			switch (key) {
-			case KeyEvent.VK_T:
+			case KeyEvent.VK_ESCAPE:
 				toggleMenu();
 				break;
 			case KeyEvent.VK_SHIFT:

@@ -29,7 +29,7 @@ public class MessageGUI extends JPanel {
 	int messageCounter = 0;
 	private String[] messages;
 	private NPC npc;
-	private int scrollTime = 30; //Milliseconds
+	private int scrollTime; //Milliseconds
 	private String currentDisplay = "";
 	private char[] messageChars;
 	private int scrollIndex = 0;
@@ -45,6 +45,7 @@ public class MessageGUI extends JPanel {
 		this.setLayout(new FlowLayout(FlowLayout.LEFT));
 		this.currentView = currentView;
 		this.multipleMessages = false;
+		this.scrollTime = player.getTextScrollingSpeed();
 		
 		initPanels();
 		
@@ -63,6 +64,7 @@ public class MessageGUI extends JPanel {
 		this.messages = message;
 		this.npc = npc;
 		this.currentDisplay = "";
+		this.scrollTime = player.getTextScrollingSpeed();
 		JLabel convBubble = new JLabel(new ImageIcon("Images\\Misc\\conversation.png"));
 		
 		initPanels();

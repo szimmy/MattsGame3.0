@@ -44,15 +44,19 @@ public class MainPlayer extends Character {
 	private Gloves gloves;
 	private Helmet helmet;
 	
+	//Player settings
+	private int textScrollingSpeed;
+	
 	/**
 	 * Constructor for new players
 	 * @param username A String for the player's username
 	 */
 	public MainPlayer(String username) {
 		super(username , STARTING_LEVEL, STARTING_CURRENT_HP, STARTING_MAX_HP, STARTING_ATK, STARTING_DEF, STARTING_SPD, 0, STARTING_MAX_CARRY);
-		this.xp = 0;
-		this.gold = 0;
-		this.inventory = new LinkedList<Item>();
+		xp = 0;
+		gold = 0;
+		textScrollingSpeed = 35; //Milliseconds
+		inventory = new LinkedList<Item>();
 	}
 
 	public Weapon getWeaponHandR() {
@@ -92,25 +96,19 @@ public class MainPlayer extends Character {
 	public void unequip(Item i) {
 		this.inventory.add(i);
 		if (i instanceof Weapon) {
-			this.weaponHandR = null;
-		}
-		else if (i instanceof Shield) {
-			this.leftHand = null;
-		}
-		else if (i instanceof Helmet) {
-			this.helmet = null;
-		}
-		else if (i instanceof ChestPiece) {
-			this.chestPiece = null;
-		}
-		else if (i instanceof Legs) {
-			this.leggings = null;
-		}
-		else if (i instanceof Gloves) {
-			this.gloves = null;
-		}
-		else{
-			this.boots = null;
+			weaponHandR = null;
+		} else if (i instanceof Shield) {
+			leftHand = null;
+		} else if (i instanceof Helmet) {
+			helmet = null;
+		} else if (i instanceof ChestPiece) {
+			chestPiece = null;
+		} else if (i instanceof Legs) {
+			leggings = null;
+		} else if (i instanceof Gloves) {
+			gloves = null;
+		} else{
+			boots = null;
 		}
 		unequipUpdateStats(i);
 	}
@@ -121,14 +119,13 @@ public class MainPlayer extends Character {
 	 */
 	public void equip(Weapon w) {
 			if(this.weaponHandR == null) {
-				this.weaponHandR = w;
-				this.inventory.remove(w);
-			}
-			else {
-				 this.inventory.add(this.weaponHandR);
-				 unequipUpdateStats(this.weaponHandR);
-				 this.weaponHandR = w;
-				 this.inventory.remove(w);
+				weaponHandR = w;
+				inventory.remove(w);
+			} else {
+				inventory.add(this.weaponHandR);
+				unequipUpdateStats(this.weaponHandR);
+				weaponHandR = w;
+				inventory.remove(w);
 			}
 		equipUpdateStats(w);
 	}
@@ -139,75 +136,64 @@ public class MainPlayer extends Character {
 	 */
 	public void equip(Armor a) {
 		if (a instanceof Boots) {
-			if(this.boots == null) {
-				this.boots = (Boots) a;
-				this.inventory.remove(a);
+			if(boots == null) {
+				boots = (Boots) a;
+				inventory.remove(a);
+			} else {
+				inventory.add(boots);
+				unequipUpdateStats(boots);
+				boots = (Boots) a;
+				inventory.remove(a);
 			}
-			else {
-				 this.inventory.add(this.boots);
-				 unequipUpdateStats(this.boots);
-				 this.boots = (Boots) a;
-				 this.inventory.remove(a);
+		} else if (a instanceof ChestPiece) {
+			if(chestPiece == null) {
+				chestPiece = (ChestPiece) a;
+				inventory.remove(a);
+			} else {
+				inventory.add(chestPiece);
+				unequipUpdateStats(chestPiece);
+				chestPiece = (ChestPiece) a;
+				inventory.remove(a);
 			}
-		}
-		else if (a instanceof ChestPiece) {
-			if(this.chestPiece == null) {
-				this.chestPiece = (ChestPiece) a;
-				this.inventory.remove(a);
+		} else if (a instanceof Gloves) {
+			if(gloves == null) {
+				gloves = (Gloves) a;
+				inventory.remove(a);
+			} else {
+				inventory.add(gloves);
+				unequipUpdateStats(gloves);
+				gloves = (Gloves) a;
+				inventory.remove(a);
 			}
-			else {
-				 this.inventory.add(this.chestPiece);
-				 unequipUpdateStats(this.chestPiece);
-				 this.chestPiece = (ChestPiece) a;
-				 this.inventory.remove(a);
+		} else if (a instanceof Helmet) {
+			if(helmet == null) {
+				helmet = (Helmet) a;
+				inventory.remove(a);
+			} else {
+				inventory.add(helmet);
+				unequipUpdateStats(helmet);
+				helmet = (Helmet) a;
+				inventory.remove(a);
 			}
-		}
-		else if (a instanceof Gloves) {
-			if(this.gloves == null) {
-				this.gloves = (Gloves) a;
-				this.inventory.remove(a);
+		} else if (a instanceof Legs) {
+			if(leggings == null) {
+				leggings = (Legs) a;
+				inventory.remove(a);
+			} else {
+				inventory.add(leggings);
+				unequipUpdateStats(leggings);
+				leggings = (Legs) a;
+				inventory.remove(a);
 			}
-			else {
-				 this.inventory.add(this.gloves);
-				 unequipUpdateStats(this.gloves);
-				 this.gloves = (Gloves) a;
-				 this.inventory.remove(a);
-			}
-		}
-		else if (a instanceof Helmet) {
-			if(this.helmet == null) {
-				this.helmet = (Helmet) a;
-				this.inventory.remove(a);
-			}
-			else {
-				 this.inventory.add(this.helmet);
-				 unequipUpdateStats(this.helmet);
-				 this.helmet = (Helmet) a;
-				 this.inventory.remove(a);
-			}
-		}
-		else if (a instanceof Legs) {
-			if(this.leggings == null) {
-				this.leggings = (Legs) a;
-				this.inventory.remove(a);
-			}
-			else {
-				 this.inventory.add(this.leggings);
-				 unequipUpdateStats(this.leggings);
-				 this.leggings = (Legs) a;
-				 this.inventory.remove(a);
-			}
-		}
-		else if(a instanceof Shield) {
-			if(this.leftHand == null) {
-				this.leftHand = (Shield) a;
-				this.inventory.remove(a);
-			}
-			else {
-				 this.inventory.add(this.leftHand);
-				 unequipUpdateStats(this.leftHand);
-				 this.leftHand = (Shield) a;
-				 this.inventory.remove(a);
+		} else if(a instanceof Shield) {
+			if(leftHand == null) {
+				leftHand = (Shield) a;
+				inventory.remove(a);
+			} else {
+				inventory.add(leftHand);
+				unequipUpdateStats(leftHand);
+				leftHand = (Shield) a;
+				inventory.remove(a);
 			}
 		}
 		equipUpdateStats(a);
@@ -292,5 +278,13 @@ public class MainPlayer extends Character {
 	
 	public void modifyGold(int gold) {
 		this.gold += gold;
+	}
+
+	public int getTextScrollingSpeed() {
+		return textScrollingSpeed;
+	}
+
+	public void setTextScrollingSpeed(int textScrollingSpeed) {
+		this.textScrollingSpeed = textScrollingSpeed;
 	}
 }

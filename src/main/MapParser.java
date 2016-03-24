@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 
 import characters.Enemy;
 import characters.Neutral;
+import gui.ViewPanel;
 import items.Item;
 import sprites.DisplayItem;
 import sprites.Exit;
@@ -26,8 +28,14 @@ import sprites.UnderLayer;
  * @author Matthew
  *
  */
-public interface MapParser {
-
+public class MapParser {
+	
+	private ViewPanel currentView;
+	
+	public MapParser(ViewPanel currentView) {
+		this.currentView = currentView;
+	}
+	
 	/**
 	 * Only method is a public static method that takes two parameters to determine the map file.
 	 * Different values read from the file are separated by a comma and loaded into a string array.
@@ -40,10 +48,9 @@ public interface MapParser {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public static ArrayList<Sprite> parseMap(int x, int y) throws FileNotFoundException, IOException {
+	public ArrayList<Sprite> parseMap(String mapLocation) throws FileNotFoundException, IOException {
 		ArrayList<Sprite> objects = new ArrayList<Sprite>();
-		String fileLocation = "Saves\\Save01\\Maps\\Map" + x + "-" + y + ".map";
-		try(BufferedReader br = new BufferedReader(new FileReader(fileLocation))) {
+		try(BufferedReader br = new BufferedReader(new FileReader(mapLocation))) {
 			String line = br.readLine();
 			while (line != null) {
 				String[] info = line.split(",");
@@ -105,10 +112,9 @@ public interface MapParser {
 				case "exit":
 					//info[1] and info[2] are coordinates of exit placement on map.
 					//info[3] and info [4] are the coordinates of where the player will be placed in the next area
-					//info[5] and info[6] are the coordinates of the next map cell
+					//info[5] is the file location of the next map cell
 					objects.add(new Exit(Integer.parseInt(info[1]), Integer.parseInt(info[2]),
-							Integer.parseInt(info[3]), Integer.parseInt(info[4]), Integer.parseInt(info[5]),
-							Integer.parseInt(info[6])));
+							Integer.parseInt(info[3]), Integer.parseInt(info[4]), info[5]));
 					break;
 					
 				case "over":
@@ -117,6 +123,20 @@ public interface MapParser {
 					
 				case "under":
 					objects.add(new UnderLayer(Integer.parseInt(info[1]), Integer.parseInt(info[2]), info[3]));
+					break;
+					
+				case "background":
+					//currentView.getController().updateBackground(info[1], currentView);
+					//currentView.requestFocus();
+					currentView.setBackground(info[1]);
+					break;
+					
+				case "hostile":
+					currentView.setHostile(true);
+					break;
+					
+				case "nonhostile":
+					currentView.setHostile(false);
 					break;
 					
 				default: 

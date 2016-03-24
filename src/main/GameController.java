@@ -2,6 +2,7 @@ package main;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
@@ -100,20 +101,28 @@ public class GameController extends JFrame {
         
         UIManager.put("Button.select", GameController.DARKER_GRAY);
         UIManager.put("Button.highlight", Color.BLACK);
+        UIManager.put("Button.foreground", BUTTON_TEXT_COLOR);   
         
-        UIManager.put("Label.foreground", Color.BLACK);
+        UIManager.put("Label.foreground", BUTTON_TEXT_COLOR);
         UIManager.put("Label.font", GAME_FONT);
         
+        UIManager.put("ComboBox.font", GAME_FONT);
+        UIManager.put("ComboBox.foreground", BUTTON_TEXT_COLOR);
+        UIManager.put("ComboBox.background", BUTTON_COLOR_THEME);
+        UIManager.put("ComboBox.buttonBackground", DARKER_GRAY);
+        UIManager.put("ComboBox.selectionBackground", DARKER_GRAY);
+        UIManager.put("ComboBox.selectionForeground", Color.BLACK);
+        UIManager.put("ComboBox.buttonHighlight", Color.BLACK);
+        UIManager.put("ComboBox.buttonDarkShadow", Color.BLACK);
+        UIManager.put("ComboBox.buttonShadow", Color.BLACK);
+        UIManager.put("ComboBox.control", Color.BLACK);
+        UIManager.put("ComboBox.foreground", Color.BLACK);
+       //UIManager.put("ComboBox.border", BorderFactory.createLineBorder(Color.BLACK, 1));
+
     	ToolTipManager.sharedInstance().setDismissDelay(15000);
     }
     
     private void initUI() {  
-		try {
-			BufferedImage myImage = ImageIO.read(new File("Images\\GrassBackgroundBIG.png"));
-			this.setContentPane(new ImagePanel(myImage));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		this.setIconImage(new ImageIcon("Images\\Player\\PlayerSouth.png").getImage());
         this.add(new ViewPanel(this));
         this.setResizable(false);
@@ -122,6 +131,18 @@ public class GameController extends JFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(new Dimension(ViewPanel.B_WIDTH, ViewPanel.B_HEIGHT)); 	
+    }
+    
+    public void updateBackground(String image, ViewPanel currentView) {
+		try {
+			BufferedImage myImage = ImageIO.read(new File(image));
+			this.setContentPane(new ImagePanel(myImage));
+			this.add(currentView);
+			this.pack();
+	        this.setSize(new Dimension(ViewPanel.B_WIDTH, ViewPanel.B_HEIGHT)); 	
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
     
 	public static ArrayList<Enemy> getRandomEnemies(int maxNumEnemies) {

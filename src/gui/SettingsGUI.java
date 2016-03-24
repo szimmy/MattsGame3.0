@@ -40,6 +40,7 @@ public class SettingsGUI extends JPanel {
 	 * Constructor for the SettingsGUI, takes a player as a parameter
 	 * @param player The player whose settings are to be changed
 	 */
+	@Deprecated
 	public SettingsGUI(MainPlayer player, ViewPanel currentView) {
 		
 		this.player = player;
@@ -62,7 +63,7 @@ public class SettingsGUI extends JPanel {
 		exit = new JButton("Exit");
 		exit.setBackground(GameController.BUTTON_COLOR_THEME);
 		exit.addActionListener(event -> {
-			currentView.removeSettingsPanel(this);
+			//currentView.removeSettingsPanel(this);
 		});
 		
 		gridSize = new JLabel("Select grid size: ");

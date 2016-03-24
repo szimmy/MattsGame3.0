@@ -42,39 +42,22 @@ public class BattleGUI extends JPanel {
 	private ArrayList<Enemy> slowEnemies; //Enemies which are slow than the player
 	//Enemies are sorted into appropriate collections when the player attacks. 
 	
-	private GameButton attack;
-	private GameButton special;
-	private GameButton inventory;
-	private GameButton stats;
-	private GameButton flee;
-	private JPanel playerOptions;
-	private JPanel battlePanel;
+	private GameButton attack, special, inventory, stats, flee;
+	private JPanel playerOptions, battlePanel, spacing, enemyPanel, playerPanel, playerFormatter, northPanel;
 	private ArrayList<JComponent> enemyImages;
-	private JPanel spacing;
-	private JPanel enemyPanel;
-	private JPanel playerPanel;
 	private BattleHandler battleHandler;
 	private Enemy selectedEnemy;
-	private JPanel playerFormatter;
 	private JButton leave;
 	private Random rand;
-	private Timer attackDisable;
-	private Timer enemyAttackCounter;
-	private Timer enemyAttackFastCounter;
-	private Timer enemyAttackSlowCounter;
-	private int enemyIndex;
-	private int enemyFastIndex;
-	private int enemySlowIndex;
+	private Timer attackDisable, enemyAttackCounter, enemyAttackFastCounter, enemyAttackSlowCounter;
+	private int enemyIndex, enemyFastIndex, enemySlowIndex;
 	private StatusBarPanel[] enemyHealthBars;
 	private JLabel info;
-	private JPanel northPanel;
 	private StatusBarPanel playerHealthBar;
 	private StatusBarPanel playerXPBar;
 	private String battleMusic;
-	private Media backgroundMusic;
-	private Media soundEffect;
-	private MediaPlayer musicPlayer;
-	private MediaPlayer soundEffectPlayer;
+	private Media backgroundMusic, soundEffect;
+	private MediaPlayer musicPlayer, soundEffectPlayer;
 	private ViewPanel currentView;
 	private Sprite mapSprite;
 	private final int ENEMY_INTERVAL = 1000; //Maximum time interval between enemy attacks.
@@ -253,6 +236,10 @@ public class BattleGUI extends JPanel {
 		musicPlayer.stop();
 		if(mapSprite != null) {
 			((Enemy) ((NPC) mapSprite).getNPC()).setSelected(false);
+			if (((Enemy) ((NPC) mapSprite).getNPC()).getCurrentHP() == 0) {
+				currentView.getObstacles().remove(mapSprite);
+				currentView.updateLayers();
+			}
 		}
 		currentView.removeBattlePanel(this);
 	}
@@ -592,7 +579,7 @@ public class BattleGUI extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			if(!enemies.isEmpty()) {
+			if (!enemies.isEmpty()) {
 			disableAttackButton();
 			
 			//Removes all objects previously in the collections.
@@ -601,10 +588,9 @@ public class BattleGUI extends JPanel {
 			
 			//Goes through each enemy sorting them into the appropriate collection. 
 			for(Enemy enemy : enemies) {
-				if(enemy.getSpeed() > player.getSpeed()) {
+				if (enemy.getSpeed() > player.getSpeed()) {
 					fastEnemies.add(enemy);
-				}
-				else {
+				} else {
 					slowEnemies.add(enemy);
 				}
 			}
@@ -615,8 +601,7 @@ public class BattleGUI extends JPanel {
 				} else {
 					info.setText("Select an enemy");
 				}
-			}
-			else {
+			} else {
 				info.setText("No enemy selected.");
 			}	
 		}
